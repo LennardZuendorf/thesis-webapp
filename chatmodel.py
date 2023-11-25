@@ -1,61 +1,48 @@
-from transformers import pipeline
-import torch
-from transformers import AutoTokenizer
+from huggingface_hub import InferenceClient
 import os
+import gradio as gr
 
 token = os.environ.get("HGFTOKEN")
 
-model = "meta-llama/Llama-2-7b-chat-hf"
-tokenizer = AutoTokenizer.from_pretrained(model, token=token)
-
-llama_pipeline = pipeline(
-    "text-generation",
-    model=model,
-    torch_dtype=torch.float32,
-    device_map="auto",
-    token = token
+client = InferenceClient(
+    "mistralai/Mistral-7B-Instruct-v0.1"
 )
 
-# Formatting function for message and history
-def format_message(message: str, history: list, system_prompt:str, memory_limit: int = 3) -> str:
+def format_prompt(message, history):
+    prompt = "<s>"
+    for user_prompt, bot_response in history:
+        prompt += f"[INST] {user_prompt} [/INST]"
+        prompt += f" {bot_response}</s> "
+    prompt += f"[INST] {message} [/INST]"
+    return prompt
 
-    if len(history) > memory_limit:
-        history = history[-memory_limit:]
+def interference(
+        prompt, history, temperature=0.7, max_new_tokens=256, top_p=0.95, repetition_penalty=1.1,
+):
+    temperature = float(temperature)
+    if temperature < 1e-2:
+        temperature = 1e-2
+    top_p = float(top_p)
 
-    system_prompt="<s>[INST] <<SYS>>\n"+system_prompt+"\n<</SYS>>"
-
-    if len(history) == 0:
-        return system_prompt + f"{message} [/INST]"
-
-    formatted_message = system_prompt + f"{history[0][0]} [/INST] {history[0][1]} </s>"
-
-    # Handle conversation history
-    for user_msg, model_answer in history[1:]:
-        formatted_message += f"<s>[INST] {user_msg} [/INST] {model_answer} </s>"
-
-    # Handle the current message
-    formatted_message += f"<s>[INST] {message} [/INST]"
-
-    return formatted_message
-
-# Generate a response from the Llama model
-def interference(message: str, history: list, ) -> str:
-    system_prompt="You are a helpful assistant providing reasonable answers."
-
-    query = format_message(message, history, system_prompt)
-    response = ""
-
-    sequences = llama_pipeline(
-        query,
+    generate_kwargs = dict(
+        temperature=temperature,
+        max_new_tokens=max_new_tokens,
+        top_p=top_p,
+        repetition_penalty=repetition_penalty,
         do_sample=True,
-        top_k=10,
-        num_return_sequences=1,
-        eos_token_id=tokenizer.eos_token_id,
-        max_length=1024,
+        seed=42,
     )
 
-    generated_text = sequences[0]['generated_text']
-    response = generated_text[len(query):]  # Remove the prompt from the output
+    formatted_prompt = format_prompt(prompt, history)
 
-    print("Chatbot:", response.strip())
-    return response.strip()
+    stream = client.text_generation(formatted_prompt, **generate_kwargs, stream=True, details=True, return_full_text=False)
+    output = ""
+
+    for response in stream:
+        output += response.token.text
+        yield output
+    return output
+
+custom=[
+
+]
