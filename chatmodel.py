@@ -13,6 +13,7 @@ llama_pipeline = pipeline(
     model=model,
     torch_dtype=torch.float32,
     device_map="auto",
+    token = token
 )
 
 # Formatting function for message and history
