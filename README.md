@@ -1,13 +1,13 @@
 ---
 title: Thesis
-emoji: 🏆
-colorFrom: gray
-colorTo: red
+emoji: 🎓
+colorFrom: red
+colorTo: yellow
 sdk: gradio
 sdk_version: 4.4.0
-app_file: app.py
+app_file: ui.py
 pinned: false
 license: mit
 ---
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+
