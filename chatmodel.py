@@ -4,9 +4,23 @@ import gradio as gr
 
 token = os.environ.get("HGFTOKEN")
 
-client = InferenceClient(
+interference = InferenceClient(
     "mistralai/Mistral-7B-Instruct-v0.1"
 )
+
+model_temperature = 0.7
+model_max_new_tokens = 256
+model_top_p = 0.95
+model_repetition_penalty = 1.1
+
+def chat (prompt, history,):
+
+    formatted_prompt = format_prompt(prompt, history)
+    answer=respond(formatted_prompt)
+
+    history.append((prompt, answer))
+
+    return "",history
 
 def format_prompt(message, history):
     prompt = "<s>"
@@ -16,33 +30,20 @@ def format_prompt(message, history):
     prompt += f"[INST] {message} [/INST]"
     return prompt
 
-def interference(
-        prompt, history, temperature=0.7, max_new_tokens=256, top_p=0.95, repetition_penalty=1.1,
-):
-    temperature = float(temperature)
+def respond(formatted_prompt):
+    temperature = float(model_temperature)
     if temperature < 1e-2:
         temperature = 1e-2
-    top_p = float(top_p)
+    top_p = float(model_top_p)
 
     generate_kwargs = dict(
         temperature=temperature,
-        max_new_tokens=max_new_tokens,
+        max_new_tokens=model_max_new_tokens,
         top_p=top_p,
-        repetition_penalty=repetition_penalty,
+        repetition_penalty=model_repetition_penalty,
         do_sample=True,
         seed=42,
     )
 
-    formatted_prompt = format_prompt(prompt, history)
-
-    stream = client.text_generation(formatted_prompt, **generate_kwargs, stream=True, details=True, return_full_text=False)
-    output = ""
-
-    for response in stream:
-        output += response.token.text
-        yield output
+    output = interference.text_generation(formatted_prompt, **generate_kwargs, stream=False, details=True, return_full_text=False).generated_text
     return output
-
-custom=[
-
-]

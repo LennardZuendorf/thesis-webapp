@@ -1,7 +1,17 @@
 import gradio as gr
-import chatmodel as chat
+import chatmodel as model
 import interpret as shap
 import visualize as viz
+import markdown
+
+def load_md(filename):
+    path = "./public/"+str(filename)
+
+    # credit: official python-markdown documentation (https://python-markdown.github.io/reference/)
+    with open(path, "r") as file:
+        text = file.read()
+
+    return markdown.markdown(text)
 
 with gr.Blocks() as ui:
     with gr.Row():
@@ -17,47 +27,33 @@ with gr.Blocks() as ui:
                 ### ChatBot Demo
                 Mitral AI 7B Model fine-tuned for instruction and fully open source (see at [HGF](https://huggingface.co/mistralai/Mistral-7B-v0.1))
                 """)
+
         with gr.Row():
-            gr.ChatInterface(
-                chat.interference
-            )
+            chatbot = gr.Chatbot(layout="panel", show_copy_button=True,avatar_images=("./public/human.jpg","./public/bot.jpg"))
         with gr.Row():
-            gr.Slider(
-                label="Temperature",
-                value=0.7,
-                minimum=0.0,
-                maximum=1.0,
-                step=0.05,
-                interactive=True,
-                info="Higher values produce more diverse outputs",
-            ),
-            gr.Slider(
-                label="Max new tokens",
-                value=256,
-                minimum=0,
-                maximum=1024,
-                step=64,
-                interactive=True,
-                info="The maximum numbers of new tokens",
-            ),
-            gr.Slider(
-                label="Top-p (nucleus sampling)",
-                value=0.95,
-                minimum=0.0,
-                maximum=1,
-                step=0.05,
-                interactive=True,
-                info="Higher values sample more low-probability tokens",
-            ),
-            gr.Slider(
-                label="Repetition penalty",
-                value=1.1,
-                minimum=1.0,
-                maximum=2.0,
-                step=0.05,
-                interactive=True,
-                info="Penalize repeated tokens",
-            )
+            gr.Markdown(
+                """
+                ##### ⚠️ All Conversations are recorded for qa assurance and explanation functionality!
+                """)
+        with gr.Row():
+                prompt = gr.Textbox(label="Input Message")
+        with gr.Row():
+            with gr.Column(scale=1):
+                clear_btn = gr.ClearButton([prompt, chatbot])
+            with gr.Column(scale=1):
+                submit_btn = gr.Button("Submit")
+
+        submit_btn.click(model.chat, [prompt, chatbot], [prompt, chatbot])
+        prompt.submit(model.chat, [prompt, chatbot], [prompt, chatbot])
+
+    with gr.Tab("Explanations"):
+        with gr.Row():
+            gr.Markdown(
+                """
+                ### Get Explanations for  
+                SHAP Visualization Dashboard adopted from [shapash](https://github.com/MAIF/shapash)
+                """)
+
 
     with gr.Tab("SHAP Dashboard"):
         with gr.Row():
@@ -83,6 +79,9 @@ with gr.Blocks() as ui:
                 Adopted from official [model paper](https://arxiv.org/abs/2310.06825) by Mistral AI
                 """)
 
+    with gr.Row():
+        with gr.Accordion("Credits, Data Protection and License", open=False):
+            gr.Markdown(value=load_md("credits_dataprotection_license.md"))
 
 if __name__ == "__main__":
     ui.launch(debug=True)
