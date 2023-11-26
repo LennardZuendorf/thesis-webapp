@@ -1,5 +1,5 @@
 import gradio as gr
-import chatmodel as model
+import mistral
 import interpret as shap
 import visualize as viz
 import markdown
@@ -43,8 +43,8 @@ with gr.Blocks() as ui:
             with gr.Column(scale=1):
                 submit_btn = gr.Button("Submit")
 
-        submit_btn.click(model.chat, [prompt, chatbot], [prompt, chatbot])
-        prompt.submit(model.chat, [prompt, chatbot], [prompt, chatbot])
+        submit_btn.click(mistral.chat, [prompt, chatbot], [prompt, chatbot])
+        prompt.submit(mistral.chat, [prompt, chatbot], [prompt, chatbot])
 
     with gr.Tab("Explanations"):
         with gr.Row():
