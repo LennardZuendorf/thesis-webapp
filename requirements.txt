@@ -1,6 +1,7 @@
-gradio
-transformers
-torch
-shap
-accelerate
-markdown
+gradio~=4.7.1
+transformers~=4.35.2
+torch~=2.1.1
+shap~=0.43.0
+accelerate~=0.24.1
+markdown~=3.5.1
+huggingface_hub~=0.19.4
