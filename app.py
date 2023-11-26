@@ -4,13 +4,10 @@
 import gradio as gr
 import markdown
 
-
 # internal imports
 from model import mistral
-from explanation import interpret as shap
 
-
-# function to load md files in pthon as a string
+# function to load md files in python as a string
 def load_md(path):
 
     # credit: official python-markdown documentation (https://python-markdown.github.io/reference/)
@@ -35,7 +32,7 @@ with gr.Blocks() as ui:
             gr.Markdown(
                 """
                 ### ChatBot Demo
-                Mitral AI 7B Model fine-tuned for instruction and fully open source (see at [HGF](https://huggingface.co/mistralai/Mistral-7B-v0.1))
+                Mitral AI 7B notebooks fine-tuned for instruction and fully open source (see at [HGF](https://huggingface.co/mistralai/Mistral-7B-v0.1))
                 """)
         # row with chatbot ui displaying "conversation" with the model (see documentation: https://www.gradio.app/docs/chatbot)
         with gr.Row():
@@ -89,7 +86,7 @@ with gr.Blocks() as ui:
                 """)
 
     # model overview tab for transparency
-    with gr.Tab("Model Overview"):
+    with gr.Tab("notebooks Overview"):
         with gr.Tab("Mistral 7B Instruct"):
             gr.Markdown(value=load_md("./model/mistral.md"))
         with gr.Tab("LlaMa 2 7B Chat"):
@@ -98,8 +95,8 @@ with gr.Blocks() as ui:
     # final row to show legal information - credits, data protection and link to the LICENSE on GitHub
     with gr.Row():
         with gr.Accordion("Credits, Data Protection and License", open=False):
-            gr.Markdown(value=load_md("./public/credits_dataprotection_license.md"))
+            gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
 
 # launch function for Gradio Interface
 if __name__ == "__main__":
-    ui.launch(debug=True)
+    ui.launch(share=False)
