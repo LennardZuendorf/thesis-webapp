@@ -1,0 +1,14 @@
+# Dockerfile to create base image with all needed dependencies
+
+# using newest python as a base image
+FROM python:3.11.6
+
+# setting workdir
+WORKDIR ./
+
+# install dependencies based on requirements
+COPY /webapp/requirements.txt ./
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+# build and run commands
+## docker build -t thesis:0.1.6-base -f Dockerfile-Base .
