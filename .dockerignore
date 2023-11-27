@@ -1,1 +1,6 @@
 # ignore memory folder
+Compose.yaml
+Dockerfile-Base
+Dockerfile-Light
+entrypoint.sh
+railway.json

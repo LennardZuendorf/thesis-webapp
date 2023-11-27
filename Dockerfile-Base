@@ -3,11 +3,8 @@
 # using newest python as a base image
 FROM python:3.11.6
 
-# setting workdir
-WORKDIR ./
-
 # install dependencies based on requirements
-COPY /webapp/requirements.txt ./
+COPY requirements.txt ./
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 # build and run commands

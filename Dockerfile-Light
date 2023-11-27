@@ -4,12 +4,11 @@
 FROM python:3.11.6
 
 #set working directory and copying files, endpoint script
-WORKDIR /webapp
-COPY /webapp/ ./
-COPY /entrypoint.sh ./
+COPY . .
+COPY entrypoint.sh .
 
 # show files in directory
-RUN ls --recursive ./
+RUN ls --recursive .
 
 # setting config and run command
 RUN chmod +x ./entrypoint.sh
