@@ -1,4 +1,4 @@
-name: Sync building branch to Hugging Face hub
+name: HGF Hub Sync (Building)
 on:
   push:
     branches: [building]
