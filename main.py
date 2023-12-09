@@ -4,11 +4,16 @@
 import gradio as gr
 import markdown
 from fastapi import FastAPI
+import os
 
 # internal imports
 from model import mistral
+from controller import controller as contr
 
-# function to load md files in python as a string
+# Global Variables
+app = FastAPI()
+
+# different functions to provide frontend abilities
 def load_md(path):
 
     # credit: official python-markdown documentation (https://python-markdown.github.io/reference/)
@@ -18,8 +23,18 @@ def load_md(path):
     # return markdown as a string
     return markdown.markdown(text)
 
-# creation of FastAPI application
-app = FastAPI()
+def system_prompt_info(sys_prompt_txt):
+    gr.Info(f"The system prompt was set to:\n {sys_prompt_txt}")
+
+def xai_info(xai_radio):
+    if xai_radio != "None":
+        gr.Info(f"The XAI was set to:\n {xai_radio}")
+    else:
+        gr.Info(f"No XAI method was selected.")
+
+def model_info(model_radio):
+    gr.Info(f"The model was set to:\n {model_radio}")
+
 
 # ui interface based on Gradio Blocks (see documentation: https://www.gradio.app/docs/interface)
 with gr.Blocks() as ui:
@@ -36,48 +51,47 @@ with gr.Blocks() as ui:
             gr.Markdown(
                 """
                 ### ChatBot Demo
-                Mitral AI 7B notebooks fine-tuned for instruction and fully open source (see at [HGF](https://huggingface.co/mistralai/Mistral-7B-v0.1))
+                Chat with the AI ChatBot using the textbox below. Manipulate the settings in the row above, including the selection of the model, the system prompt and the XAI method.
                 """)
+        # row with textbox to enter the system prompt, which is handed over to the model at every turn
+        with gr.Row(equal_height=True):
+            with gr.Column(scale=3):
+                system_prompt = gr.Textbox(label="System Prompt",info= "Set the models system prompt, dictating how it answers.", placeholder="You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.")
+            with gr.Column(scale=1):
+                model = gr.Radio(["Mistral", "Llama 2"], label="Model Selection", info="Select Model to use for chat.", value="Mistral", interactive=True, show_label=True)
+            with gr.Column(scale=1):
+                xai = gr.Radio(["None", "SHAP", "Visualizer"], label="XAI Settings", info="XAI Functionalities to use.", value="None", interactive=True, show_label=True)
+
+            # calling info functions on inputs for different settings
+            system_prompt.submit(system_prompt_info, [system_prompt])
+            model.input(model_info, [model])
+            xai.input(xai_info, [xai])
+
         # row with chatbot ui displaying "conversation" with the model (see documentation: https://www.gradio.app/docs/chatbot)
         with gr.Row():
             chatbot = gr.Chatbot(layout="panel", show_copy_button=True,avatar_images=("./public/human.jpg","./public/bot.jpg"))
-        # disclaimer information row - data is recorded for shap dashboard and model explanability
-        with gr.Row():
-            gr.Markdown(
-                """
-                ##### ⚠️ All Conversations are recorded for qa assurance and explanation functionality!
-                """)
         # row with input textbox
         with gr.Row():
-                prompt = gr.Textbox(label="Input Message")
+                user_prompt = gr.Textbox(label="Input Message")
         # row with columns for buttons to submit and clear content
         with gr.Row():
             with gr.Column(scale=1):
                 # default clear button which clearn the given components (see documentation: https://www.gradio.app/docs/clearbutton)
-                clear_btn = gr.ClearButton([prompt, chatbot])
+                clear_btn = gr.ClearButton([user_prompt, chatbot])
             with gr.Column(scale=1):
-                submit_btn = gr.Button("Submit")
+                submit_btn = gr.Button("Submit", variant="primary")
 
         # two functions performing the same action (triggered the model response), when the button is used or the textbox submit function is used (clicking enter).
-        submit_btn.click(mistral.chat, [prompt, chatbot], [prompt, chatbot])
-        prompt.submit(mistral.chat, [prompt, chatbot], [prompt, chatbot])
+        submit_btn.click(contr.interference, [user_prompt, chatbot, system_prompt, model, xai], [user_prompt, chatbot])
+        user_prompt.submit(contr.interference, [user_prompt, chatbot, system_prompt, model, xai], [user_prompt, chatbot])
 
     # explanations tab used to provide explanations for a specific conversation
     with gr.Tab("Explanations"):
         with gr.Row():
             gr.Markdown(
                 """
-                ### Get Explanations for  
-                SHAP Visualization Dashboard adopted from [shapash](https://github.com/MAIF/shapash)
-                """)
-
-    # shap dashboard tab for shapash inspired dashboard
-    with gr.Tab("SHAP Dashboard"):
-        with gr.Row():
-            gr.Markdown(
-                """
-                ### SHAP Dashboard
-                SHAP Visualization Dashboard adopted from [shapash](https://github.com/MAIF/shapash)
+                ### Get Explanations for Conversations
+                Using your selected XAI method, you can get explanations for the conversation you had with the AI ChatBot. The explanations are based on the last message you sent to the AI ChatBot.
                 """)
 
     # visualize dashboard to display global visualization provided by the BERTViz adoption
@@ -86,24 +100,19 @@ with gr.Blocks() as ui:
             gr.Markdown(
                 """
                 ### Visualization Dashboard
-                Visualization Dashboard adopted from [BERTViz](https://github.com/jessevig/bertviz)
+                Global Visualization Dashboard adopted from [BERTViz](https://github.com/jessevig/bertviz)
                 """)
 
-    # model overview tab for transparency
-    with gr.Tab("notebooks Overview"):
-        with gr.Tab("Mistral 7B Instruct"):
-            gr.Markdown(value=load_md("./model/mistral.md"))
-        with gr.Tab("LlaMa 2 7B Chat"):
-            gr.Markdown(value=load_md("./model/llama2.md"))
 
     # final row to show legal information - credits, data protection and link to the LICENSE on GitHub
     with gr.Row():
         with gr.Accordion("Credits, Data Protection and License", open=False):
             gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
 
-# launch function for fastAPI Application
+# mount function for fastAPI Application
 app = gr.mount_gradio_app(app, ui, path="/")
 
-# launch function for Gradio Interface on hgf spaces
+# launch function using uvicorn to launch the fastAPI application
 if __name__ == "__main__":
-    ui.launch(share=False)
+    from uvicorn import run
+    run("main:app", port=8080, reload=True)

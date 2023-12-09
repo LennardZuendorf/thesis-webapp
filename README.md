@@ -12,6 +12,7 @@ app_port: 8080
 ---
 
 # Bachelor Thesis
+## Webapp
 #### This is the ui showcase for my thesis about interpretability in a LLM based chatbot application and applications of XAI.
 
 ## 🔗 Links:
@@ -22,7 +23,7 @@ app_port: 8080
 
 **Language and Framework:** Python, JupyterNotebook
 
-**Noteable Packages:** 🤗 Transformers, Gradio, SHAP, BERTViz, Shapas
+**Noteable Packages:** 🤗 Transformers, Gradio, SHAP, BERTViz, Shapash
 
 ## 👨‍💻 Author and Credits:</h2>
 
