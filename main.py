@@ -1,37 +1,45 @@
 # main application file initializing the gradio based ui and calling other modules
 
+import subprocess
+import sys
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "./components/testinghtml/dist/gradio_testinghtml-0.0.1-py3-none-any.whl"])
+
+from gradio_testinghtml import testingHTML
+
 # external package imports
 import gradio as gr
 import markdown
 from fastapi import FastAPI
-import os
 
 # internal imports
-from model import mistral
-from controller import controller as contr
+from backend.controller import interference
 
 # Global Variables
 app = FastAPI()
 
 # different functions to provide frontend abilities
-def load_md(path):
 
+# function to load markdown files
+def load_md(path):
     # credit: official python-markdown documentation (https://python-markdown.github.io/reference/)
     with open(path, "r") as file:
         text = file.read()
-
-    # return markdown as a string
     return markdown.markdown(text)
 
+# function to display the system prompt info
 def system_prompt_info(sys_prompt_txt):
     gr.Info(f"The system prompt was set to:\n {sys_prompt_txt}")
 
+# function to display the xai info
 def xai_info(xai_radio):
     if xai_radio != "None":
         gr.Info(f"The XAI was set to:\n {xai_radio}")
     else:
         gr.Info(f"No XAI method was selected.")
 
+# function to display the model info
 def model_info(model_radio):
     gr.Info(f"The model was set to:\n {model_radio}")
 
@@ -82,8 +90,10 @@ with gr.Blocks() as ui:
                 submit_btn = gr.Button("Submit", variant="primary")
 
         # two functions performing the same action (triggered the model response), when the button is used or the textbox submit function is used (clicking enter).
-        submit_btn.click(contr.interference, [user_prompt, chatbot, system_prompt, model, xai], [user_prompt, chatbot])
-        user_prompt.submit(contr.interference, [user_prompt, chatbot, system_prompt, model, xai], [user_prompt, chatbot])
+        # hands over the information needed for the chat (prompt, history, and system prompt) and the information needed to call the right model and xai function (model, xai)
+        # returns the prompt and history to be displayed in the chatbot ui
+        submit_btn.click(interference, [user_prompt, chatbot, system_prompt, model, xai], [user_prompt, chatbot])
+        user_prompt.submit(interference, [user_prompt, chatbot, system_prompt, model, xai], [user_prompt, chatbot])
 
     # explanations tab used to provide explanations for a specific conversation
     with gr.Tab("Explanations"):
@@ -93,15 +103,11 @@ with gr.Blocks() as ui:
                 ### Get Explanations for Conversations
                 Using your selected XAI method, you can get explanations for the conversation you had with the AI ChatBot. The explanations are based on the last message you sent to the AI ChatBot.
                 """)
-
-    # visualize dashboard to display global visualization provided by the BERTViz adoption
-    with gr.Tab("Visualize Dashboard"):
         with gr.Row():
-            gr.Markdown(
-                """
-                ### Visualization Dashboard
-                Global Visualization Dashboard adopted from [BERTViz](https://github.com/jessevig/bertviz)
-                """)
+            gr.HTML(load_md("public/explanations.md"))
+        with gr.Row():
+            with gr.Accordion("Full Size Plot of All SHAP Values", open=False):
+                gr.Plot(label="SHAP Values Plot")
 
 
     # final row to show legal information - credits, data protection and link to the LICENSE on GitHub

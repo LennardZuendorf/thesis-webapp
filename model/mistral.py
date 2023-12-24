@@ -10,19 +10,17 @@ interference = InferenceClient(
     "mistralai/Mistral-7B-Instruct-v0.1"
 )
 
+temperature = 0.7
+max_new_tokens = 100
+top_p = 0.95
+repetition_penalty = 1.1
+
 # chat function - basically the main function calling other functions and returning a response to showcase in chatbot ui
-def chat (prompt,
-          history,
-          temperature=0.7,
-          max_new_tokens = 320,
-          top_p = 0.95,
-          repetition_penalty = 1.1,
-          system_prompt = "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe."
-):
+def chat (prompt,history,system_prompt):
 
     # creating formatted prompt and calling for an answer from the model
     formatted_prompt = format_prompt(prompt, history)
-    answer=respond(formatted_prompt,system_prompt, temperature, max_new_tokens, top_p, repetition_penalty)
+    answer=respond(formatted_prompt,system_prompt)
 
     # updating the chat history with the new answer
     history.append((prompt, answer))
@@ -44,7 +42,8 @@ def format_prompt(message, history):
 
 # function to get the response
 # credit: minimally changed from Hugging Face, Inc/ Omar Sanseviero (see https://huggingface.co/spaces/osanseviero/mistral-super-fast/)
-def respond(formatted_prompt, system_prompt, temperature, max_new_tokens, top_p, repetition_penalty):
+def respond(formatted_prompt, system_prompt):
+    global temperature, max_new_tokens, top_p, repetition_penalty
 
     # setting model temperature and
     temperature = float(temperature)
