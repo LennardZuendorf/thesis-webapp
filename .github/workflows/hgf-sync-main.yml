@@ -1,10 +1,7 @@
-name: Sync building branch to Hugging Face hub
+name: HGF Hub Sync (Main)
 on:
   push:
-    branches: [building]
-  
-  pull_request:
-    branches: [building]
+    branches: [main]
   
   workflow_dispatch:
 
@@ -19,4 +16,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push https://LennardZuendorf:$HF_TOKEN@huggingface.co/spaces/LennardZuendorf/thesis-webapp-docker building
+        run: git push https://LennardZuendorf:$HF_TOKEN@huggingface.co/spaces/LennardZuendorf/thesis-webapp-docker main
