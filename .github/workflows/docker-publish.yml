@@ -10,7 +10,7 @@ on:
     - cron: '22 7 * * *'
   release:
     types: created
-    
+
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io

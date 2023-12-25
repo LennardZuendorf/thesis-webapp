@@ -2,10 +2,10 @@ name: Sync building branch to Hugging Face hub
 on:
   push:
     branches: [building]
-  
+
   pull_request:
     branches: [building]
-  
+
   workflow_dispatch:
 
 jobs:

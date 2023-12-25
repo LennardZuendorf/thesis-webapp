@@ -1,4 +1,4 @@
-model_temperature = 0.7
-model_max_new_tokens = 100
-model_top_p = 0.95
-model_repetition_penalty = 1.1
+TEMPERATURE = 0.7
+MAX_NEW_TOKENS = 100
+TOP_P = 0.95
+REPETITION_PENALTY = 1.1

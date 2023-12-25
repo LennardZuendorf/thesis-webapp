@@ -15,7 +15,7 @@ For this project, two different models are used. Both are used through Huggingfa
 LlaMa 2 is an open source model by Meta Research. See [offical paper](https://arxiv.org/pdf/2307.09288.pdf) for more information.
 
 - the version used in this project is LlaMa 2 7B Chat HF (HF = special version for huggingface), see [huggingface model hub](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)
-- the model is fine-tuned for chat interactions by Meta Research 
+- the model is fine-tuned for chat interactions by Meta Research
 
 ##### Mistral
 Mistral is an open source model by Mistral AI. See [offical paper](https://arxiv.org/pdf/2310.06825.pdf) for more information.
@@ -43,7 +43,7 @@ This application uses a slightly customized version of the bertviz library, whic
 This is a non-commercial project, which does not collect any personal data. The only data collected is the data you enter into the application. This data is only used to generate the explanations and is not stored anywhere.
 However, the application may be hosted with an external service (i.e. Huggingface Spaces), which may collect data. Please refer to the data protection policies of the respective service for more information.
 
-If you use the "flag" feature, the data you enter will be stored in *publicly available* csv file. 
+If you use the "flag" feature, the data you enter will be stored in *publicly available* csv file.
 
 
 # License
