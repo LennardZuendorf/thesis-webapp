@@ -1,10 +1,8 @@
+# Docker image build and publish workflow
+# CREDIT: Adopted from
 name: Docker
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
+# running on every release and on manual dispatch
 on:
   schedule:
     - cron: '22 7 * * *'
@@ -12,21 +10,23 @@ on:
     types: created
 
 env:
-  # Use docker.io for Docker Hub if empty
+  # set the registry to the GitHub Container Registry
   REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
+  # set github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}:${{ github.ref }}
 
-
+# jobs to run
 jobs:
-  build:
 
+  # build job
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
       id-token: write
 
+    # steps to run on the job
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -34,7 +34,6 @@ jobs:
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
-        if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@6e04d228eb30da1757ee4e1dd75a0ec73a653e06 #v3.1.1
         with:
           cosign-release: 'v2.1.1'

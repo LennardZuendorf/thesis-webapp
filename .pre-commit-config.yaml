@@ -10,15 +10,16 @@ repos:
   hooks:
     - id: black
       language_version: python3.11
+      exclude: ^components/
 - repo: local
   hooks:
     - id: pylint
       name: pylint
       entry: pylint
+      exclude: ^components/
       language: system
       types: [python]
       args:
         [
           "-rn", # Only display messages
-          "-sn", # Don't display the score
         ]

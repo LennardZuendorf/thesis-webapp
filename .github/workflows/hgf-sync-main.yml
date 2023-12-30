@@ -1,19 +1,28 @@
+# workflow that syncs the main branch to the Hugging Face Hub (Huggingface Spaces)
+#CREDIT Copied from Hugging Face, Inc.
+
 name: HGF Hub Sync (Main)
+# runs on pushes to the main branch and manually triggered workflows
 on:
   push:
     branches: [main]
 
   workflow_dispatch:
 
+# jobs to run
 jobs:
+  # sync job
   sync-to-hub:
     runs-on: ubuntu-latest
     steps:
+    # checkout the repository
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           lfs: true
+      # push to hub with huggingface token
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        # run git push
         run: git push https://LennardZuendorf:$HF_TOKEN@huggingface.co/spaces/LennardZuendorf/thesis-webapp-docker main

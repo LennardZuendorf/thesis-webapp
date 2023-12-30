@@ -1,78 +1,71 @@
-import os
-from huggingface_hub import InferenceClient
+# Mistral 7B model module for chat interaction and model instance control
 
+# external imports
+from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+import torch
+import gradio as gr
 
-# huggingface token used to load closed off models
-token = os.environ.get("HGFTOKEN")
+# global variables for model and tokenizer, config
+MODEL = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+TOKENIZER = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1")
+MISTRAL_CONFIG = GenerationConfig.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1")
 
-# interference client created from mistral 7b instruction fine tuned model
-# credit: copied 1:1 from Hugging Face, Inc/ Omar Sanseviero (see
-# https://huggingface.co/spaces/osanseviero/mistral-super-fast/)
-interference = InferenceClient("mistralai/Mistral-7B-Instruct-v0.1")
-
-TEMPERATURE = 0.7
-MAX_NEW_TOKENS = 100
-TOP_P = 0.95
-REPETITION_PENALTY = 1.1
-
-
-# chat function - basically the main function calling other functions and
-# returning a response to showcase in chatbot ui
-def chat(prompt, history):
-    # creating formatted prompt and calling for an answer from the model
-    formatted_prompt = format_prompt(prompt, history)
-    answer = respond(formatted_prompt)
-
-    # updating the chat history with the new answer
-    history.append((prompt, answer))
-
-    # returning the chat history to be displayed in the chatbot ui
-    return "", history
-
-
-# function to format prompt for the text generation model
-# credit: copied 1:1 from Hugging Face, Inc/ Omar Sanseviero (see
-# https://huggingface.co/spaces/osanseviero/mistral-super-fast/)
-# TODO: Setup to Use System Prompt
-def format_prompt(message, history):
-    prompt = "<s>"
-
-    # labeling each message in the history as bot or user
-    for user_prompt, bot_response in history:
-        prompt += f"[INST] {user_prompt} [/INST]"
-        prompt += f" {bot_response}</s> "
-    prompt += f"[INST] {message} [/INST]"
-    return prompt
-
-
-# function to get the response
-# credit: minimally changed from Hugging Face, Inc/ Omar Sanseviero (see
-# https://huggingface.co/spaces/osanseviero/mistral-super-fast/)
-def respond(formatted_prompt):
-    global TEMPERATURE, TOP_P
-
-    # setting model temperature and
-    TEMPERATURE = float(TEMPERATURE)
-    TEMPERATURE = max(TEMPERATURE, 1e-2)
-
-    TOP_P = float(TOP_P)
-
-    # creating model arguments/settings
-    generate_kwargs = {
-        "temperature": TEMPERATURE,
-        "max_new_tokens": MAX_NEW_TOKENS,
-        "top_p": TOP_P,
-        "repetition_penalty": REPETITION_PENALTY,
+MISTRAL_CONFIG.update(
+    **{
+        "temperature": 0.7,
+        "max_new_tokens": 50,
+        "top_p": 0.9,
+        "repetition_penalty": 1.2,
         "do_sample": True,
         "seed": 42,
     }
+)
 
-    # calling for model output and returning it
-    output = interference.text_generation(
-        formatted_prompt,
-        **generate_kwargs,
-        stream=False,
-        details=True,
-        return_full_text=False,
-    ).generated_text
-    return output
+
+# function to format the prompt to include chat history, message
+# CREDIT: adapted from Venkata Bhanu Teja Pallakonda in Huggingface discussions
+## see https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1/discussions/
+
+
+def format_prompt(message: str, history: list, system_prompt: str, knowledge: str = ""):
+    prompt = ""
+    if knowledge != "":
+        gr.Warning(
+            """Mistral does not support
+            additionally knowledge!"""
+        )
+
+    # if no history, use system prompt and example message
+    if len(history) == 0:
+        prompt = f"""<s>[INST] {system_prompt} [/INST] How can I help you today? </s>
+        [INST] {message} [/INST]"""
+    else:
+        # takes the very first exchange and the system prompt as base
+        for user_prompt, bot_response in history[0]:
+            prompt = (
+                f"<s>[INST] {system_prompt} {user_prompt} [/INST] {bot_response}</s>"
+            )
+
+        # takes all the following conversations and adds them as context
+        prompt += "".join(
+            f"[INST] {user_prompt} [/INST] {bot_response}</s>"
+            for user_prompt, bot_response in history[1:]
+        )
+    return prompt
+
+
+# generation class returning the model response based on the input
+# CREDIT: adapted from official Mistral Ai 7B Instruct documentation on Huggingface
+## see https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1
+def respond(prompt):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    # tokenizing inputs and configuring model
+    input_ids = TOKENIZER(f"{prompt}", return_tensors="pt")
+    model_input = input_ids.to(device)
+    MODEL.to(device)
+
+    # generating text with tokenized input, returning output
+    output_ids = MODEL.generate(model_input, generation_config=MISTRAL_CONFIG)
+    output_text = TOKENIZER.batch_decode(output_ids)
+    return output_text[0]

@@ -13,6 +13,7 @@ exclude = '''
   | buck-out
   | build
   | dist
+  | components
 )/
 '''
 
@@ -53,3 +54,6 @@ disable = [
 
 [tool.pylint.format]
 max-line-length = "88"
+
+[tool.pylint.MASTER]
+ignore = "components"

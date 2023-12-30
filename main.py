@@ -10,13 +10,12 @@ from backend.controller import interference
 # Global Variables
 app = FastAPI()
 
+
 # different functions to provide frontend abilities
-
-
 # function to load markdown files
 def load_md(path):
-    # credit: official python-markdown documentation
-    # (https://python-markdown.github.io/reference/)
+    # CREDIT: official python-markdown documentation
+    ## see https://python-markdown.github.io/reference/)
     with open(path, "r", encoding="utf-8") as file:
         text = file.read()
     return markdown.markdown(text)
@@ -24,11 +23,13 @@ def load_md(path):
 
 # function to display the system prompt info
 def system_prompt_info(sys_prompt_txt):
+    # display the system prompt using the Gradio Info component
     gr.Info(f"The system prompt was set to:\n {sys_prompt_txt}")
 
 
 # function to display the xai info
 def xai_info(xai_radio):
+    # display the xai method using the Gradio Info component
     if xai_radio != "None":
         gr.Info(f"The XAI was set to:\n {xai_radio}")
     else:
@@ -37,6 +38,7 @@ def xai_info(xai_radio):
 
 # function to display the model info
 def model_info(model_radio):
+    # display the model using the Gradio Info component
     gr.Info(f"The model was set to:\n {model_radio}")
 
 
@@ -45,6 +47,7 @@ def model_info(model_radio):
 with gr.Blocks() as ui:
     # header row with markdown based text
     with gr.Row():
+        # markdown component to display the header
         gr.Markdown(
             """
             # Thesis Demo - AI Chat Application with XAI
@@ -54,6 +57,7 @@ with gr.Blocks() as ui:
     # ChatBot tab used to chat with the AI chatbot
     with gr.Tab("AI ChatBot"):
         with gr.Row():
+            # markdown component to display the header of the current tab
             gr.Markdown(
                 """
                 ### ChatBot Demo
@@ -63,10 +67,11 @@ with gr.Blocks() as ui:
                 the system prompt and the XAI method.
                 """
             )
-        # row with textbox to enter the system prompt, which is handed over to
-        # the model at every turn
+        # row with columns for the different settings
         with gr.Row(equal_height=True):
+            # column that takes up 3/5 of the row
             with gr.Column(scale=3):
+                # textbox to enter the system prompt
                 system_prompt = gr.Textbox(
                     label="System Prompt",
                     info="Set the models system prompt, dictating how it answers.",
@@ -76,8 +81,9 @@ with gr.Blocks() as ui:
                     ),
                 )
             with gr.Column(scale=1):
+                # checkbox group to select the model
                 model = gr.Radio(
-                    ["Mistral", "Llama 2"],
+                    ["Mistral", "GODEL"],
                     label="Model Selection",
                     info="Select Model to use for chat.",
                     value="Mistral",
@@ -85,6 +91,7 @@ with gr.Blocks() as ui:
                     show_label=True,
                 )
             with gr.Column(scale=1):
+                # checkbox group to select the xai method
                 xai = gr.Radio(
                     ["None", "SHAP", "Visualizer"],
                     label="XAI Settings",
@@ -99,9 +106,10 @@ with gr.Blocks() as ui:
             model.input(model_info, [model])
             xai.input(xai_info, [xai])
 
-        # row with chatbot ui displaying "conversation" with the model (see
-        # documentation: https://www.gradio.app/docs/chatbot)
+        # row with chatbot ui displaying "conversation" with the model
         with gr.Row():
+            # out of the  box chatbot component
+            # see documentation: https://www.gradio.app/docs/chatbot
             chatbot = gr.Chatbot(
                 layout="panel",
                 show_copy_button=True,
@@ -109,50 +117,86 @@ with gr.Blocks() as ui:
             )
         # row with input textbox
         with gr.Row():
+            # textbox to enter the user prompt
             user_prompt = gr.Textbox(label="Input Message")
         # row with columns for buttons to submit and clear content
         with gr.Row():
             with gr.Column(scale=1):
-                # default clear button which clearn the given components (see
+                # out of the box clear button which clearn the given components (see
                 # documentation: https://www.gradio.app/docs/clearbutton)
                 clear_btn = gr.ClearButton([user_prompt, chatbot])
             with gr.Column(scale=1):
                 submit_btn = gr.Button("Submit", variant="primary")
-        # function to trigger the model
-        # when button or the textbox submit function is used.
-        # hands over the information needed for the chat
-        # and information needed to call model and xai function
-        # returns prompt, history and xai
-        submit_btn.click(
-            interference,
-            [user_prompt, chatbot, system_prompt, model, xai],
-            [user_prompt, chatbot],
-        )
-        user_prompt.submit(
-            interference,
-            [user_prompt, chatbot, system_prompt, model, xai],
-            [user_prompt, chatbot],
-        )
 
     # explanations tab used to provide explanations for a specific conversation
     with gr.Tab("Explanations"):
+        # row with markdown component to display the header of the current tab
         with gr.Row():
             gr.Markdown(
                 """
                 ### Get Explanations for Conversations
                 Using your selected XAI method, you can get explanations for
                 the conversation you had with the AI ChatBot. The explanations are
-                based on the last message you sent to the AI ChatBot.
+                based on the last message you sent to the AI ChatBot (see text)
                 """
             )
+        # row that displays the settings used to create the current model output
+        ## each textbox statically displays the current values
         with gr.Row():
-            gr.HTML(load_md("public/explanations.md"))
+            with gr.Column():
+                gr.Textbox(
+                    value=xai,
+                    label="Used XAI Variant",
+                    show_label=True,
+                    interactive=True,
+                )
+            with gr.Column():
+                gr.Textbox(
+                    value=model, label="Used Model", show_label=True, interactive=True
+                )
+            with gr.Column():
+                gr.Textbox(
+                    value=system_prompt,
+                    label="Used System Prompt",
+                    show_label=True,
+                    interactive=True,
+                )
+        # row that displays the generated explanation of the model (if applicable)
         with gr.Row():
-            with gr.Accordion("Full Size Plot of All SHAP Values", open=False):
-                gr.Plot(label="SHAP Values Plot")
+            # wraps the explanation html in an iframe to display it
+            xai_interactive = gr.HTML(
+                label="Interactive Explanation",
+                show_label=True,
+                value="<div><h1>No Graphic to Display</h1></div>",
+            )
+        # row and accordion to display an explanation plot (if applicable)
+        with gr.Row():
+            with gr.Accordion("Token Explanation Plot", open=False):
+                # plot component that takes a matplotlib figure as input
+                xai_plot = gr.Plot(
+                    label="Token Level Explanation",
+                    show_label=True,
+                    every=5,
+                )
 
-    # final row to show legal information - credits, data protection and link
-    # to the LICENSE on GitHub
+    # functions to trigger the controller
+    ## takes information for the chat and the model, xai selection
+    ## returns prompt, history and xai data
+    ## see backend/controller.py for more information
+    submit_btn.click(
+        interference,
+        [user_prompt, chatbot, system_prompt, model, xai],
+        [user_prompt, chatbot, xai_interactive, xai_plot],
+    )
+    # function triggered by the enter key
+    user_prompt.submit(
+        interference,
+        [user_prompt, chatbot, system_prompt, model, xai],
+        [user_prompt, chatbot, xai_interactive, xai_plot],
+    )
+
+    # final row to show legal information
+    ## - credits, data protection and link to the License
     with gr.Row():
         with gr.Accordion("Credits, Data Protection and License", open=False):
             gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
@@ -164,4 +208,6 @@ app = gr.mount_gradio_app(app, ui, path="/")
 if __name__ == "__main__":
     from uvicorn import run
 
+    # run the application on port 8080 in reload mode
+    ## for local development, uses Docker for Prod deployment
     run("main:app", port=8080, reload=True)
