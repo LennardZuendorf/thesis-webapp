@@ -1,13 +1,11 @@
 # Docker image build and publish workflow
 # CREDIT: Adopted from
-name: Docker
+name: Docker Build & Publish
 
 # running on every release and on manual dispatch
 on:
-  schedule:
-    - cron: '22 7 * * *'
   release:
-    types: created
+    types: [created]
 
 env:
   # set the registry to the GitHub Container Registry
