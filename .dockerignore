@@ -3,6 +3,10 @@ Compose.yaml
 Dockerfile-Base
 Dockerfile-Light
 entrypoint.sh
-railway.json
+.gitignore
+.github
+.git
+.pre-commit-config.yaml
+start-venv.sh
 /components/
 /components/*

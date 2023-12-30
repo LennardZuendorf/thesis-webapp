@@ -7,8 +7,9 @@ import gradio as gr
 # internal imports
 from backend.controller import interference
 
-# Global Variables
+# Global Variables and css
 app = FastAPI()
+css = "body {text-align: start !important;}"
 
 
 # different functions to provide frontend abilities
@@ -36,37 +37,33 @@ def xai_info(xai_radio):
         gr.Info("No XAI method was selected.")
 
 
-# function to display the model info
-def model_info(model_radio):
-    # display the model using the Gradio Info component
-    gr.Info(f"The model was set to:\n {model_radio}")
-
-
 # ui interface based on Gradio Blocks (see documentation:
 # https://www.gradio.app/docs/interface)
-with gr.Blocks() as ui:
+with gr.Blocks(
+    css="text-align: start !important",
+    title="Thesis Webapp Showcase",
+    head="<head>",
+) as ui:
     # header row with markdown based text
     with gr.Row():
         # markdown component to display the header
-        gr.Markdown(
-            """
-            # Thesis Demo - AI Chat Application with XAI
+        gr.Markdown("""
+            # Thesis Demo - AI Chat Application with GODEL
+            ## XAI powered by SHAP and BERTVIZ
             ### Select between tabs below for the different views.
-            """
-        )
+            """)
     # ChatBot tab used to chat with the AI chatbot
     with gr.Tab("AI ChatBot"):
         with gr.Row():
             # markdown component to display the header of the current tab
-            gr.Markdown(
-                """
+            gr.Markdown("""
                 ### ChatBot Demo
                 Chat with the AI ChatBot using the textbox below.
                 Manipulate the settings in the row above,
                 including the selection of the model,
                 the system prompt and the XAI method.
-                """
-            )
+
+                """)
         # row with columns for the different settings
         with gr.Row(equal_height=True):
             # column that takes up 3/5 of the row
@@ -81,21 +78,11 @@ with gr.Blocks() as ui:
                     ),
                 )
             with gr.Column(scale=1):
-                # checkbox group to select the model
-                model = gr.Radio(
-                    ["Mistral", "GODEL"],
-                    label="Model Selection",
-                    info="Select Model to use for chat.",
-                    value="Mistral",
-                    interactive=True,
-                    show_label=True,
-                )
-            with gr.Column(scale=1):
                 # checkbox group to select the xai method
-                xai = gr.Radio(
+                xai_selection = gr.Radio(
                     ["None", "SHAP", "Visualizer"],
                     label="XAI Settings",
-                    info="XAI Functionalities to use.",
+                    info="Select a XAI Implementation to use.",
                     value="None",
                     interactive=True,
                     show_label=True,
@@ -103,11 +90,10 @@ with gr.Blocks() as ui:
 
             # calling info functions on inputs for different settings
             system_prompt.submit(system_prompt_info, [system_prompt])
-            model.input(model_info, [model])
-            xai.input(xai_info, [xai])
+            xai_selection.input(xai_info, [xai_selection])
 
         # row with chatbot ui displaying "conversation" with the model
-        with gr.Row():
+        with gr.Row(equal_height=True):
             # out of the  box chatbot component
             # see documentation: https://www.gradio.app/docs/chatbot
             chatbot = gr.Chatbot(
@@ -115,10 +101,28 @@ with gr.Blocks() as ui:
                 show_copy_button=True,
                 avatar_images=("./public/human.jpg", "./public/bot.jpg"),
             )
-        # row with input textbox
+        # rows with input textboxes
+        with gr.Row():
+            # textbox to enter the knowledge
+            with gr.Accordion(label="Additional Knowledge", open=False):
+                knowledge_input = gr.Textbox(
+                    value="",
+                    label="Knowledge",
+                    max_lines=5,
+                    info="Add additional context knowledge.",
+                    show_label=True,
+                )
         with gr.Row():
             # textbox to enter the user prompt
-            user_prompt = gr.Textbox(label="Input Message")
+            user_prompt = gr.Textbox(
+                label="Input Message",
+                max_lines=5,
+                info="""
+                Ask the ChatBot a question.
+                Hint: More complicated question give better explanation insights!
+                """,
+                show_label=True,
+            )
         # row with columns for buttons to submit and clear content
         with gr.Row():
             with gr.Column(scale=1):
@@ -127,79 +131,84 @@ with gr.Blocks() as ui:
                 clear_btn = gr.ClearButton([user_prompt, chatbot])
             with gr.Column(scale=1):
                 submit_btn = gr.Button("Submit", variant="primary")
+        with gr.Row():
+            gr.Examples(
+                label="Example Questions",
+                examples=[
+                    [
+                        "How does a black hole form in space?",
+                        (
+                            "Black holes are created when a massive star's core"
+                            " collapses after a supernova, forming an object with"
+                            " gravity so intense that even light cannot escape."
+                        ),
+                    ],
+                    [
+                        (
+                            "Explain the importance of the Rosetta Stone in"
+                            " understanding ancient languages."
+                        ),
+                        (
+                            "The Rosetta Stone, an ancient Egyptian artifact, was key"
+                            " in decoding hieroglyphs, featuring the same text in three"
+                            " scripts: hieroglyphs, Demotic, and Greek."
+                        ),
+                    ],
+                ],
+                inputs=[user_prompt, knowledge_input],
+            )
 
     # explanations tab used to provide explanations for a specific conversation
     with gr.Tab("Explanations"):
         # row with markdown component to display the header of the current tab
         with gr.Row():
-            gr.Markdown(
-                """
+            gr.Markdown("""
                 ### Get Explanations for Conversations
                 Using your selected XAI method, you can get explanations for
                 the conversation you had with the AI ChatBot. The explanations are
                 based on the last message you sent to the AI ChatBot (see text)
-                """
-            )
-        # row that displays the settings used to create the current model output
-        ## each textbox statically displays the current values
-        with gr.Row():
-            with gr.Column():
-                gr.Textbox(
-                    value=xai,
-                    label="Used XAI Variant",
-                    show_label=True,
-                    interactive=True,
-                )
-            with gr.Column():
-                gr.Textbox(
-                    value=model, label="Used Model", show_label=True, interactive=True
-                )
-            with gr.Column():
-                gr.Textbox(
-                    value=system_prompt,
-                    label="Used System Prompt",
-                    show_label=True,
-                    interactive=True,
-                )
+                """)
         # row that displays the generated explanation of the model (if applicable)
-        with gr.Row():
-            # wraps the explanation html in an iframe to display it
+        with gr.Row(variant="panel"):
+            # wraps the explanation html in an iframe to display it interactively
             xai_interactive = gr.HTML(
                 label="Interactive Explanation",
+                value=(
+                    '<div style="text-align: center"><h4>No Graphic to Display'
+                    " (Yet)</h4></div>"
+                ),
                 show_label=True,
-                value="<div><h1>No Graphic to Display</h1></div>",
             )
         # row and accordion to display an explanation plot (if applicable)
         with gr.Row():
             with gr.Accordion("Token Explanation Plot", open=False):
+                gr.Markdown("""
+                #### Plotted Values
+                Values have been excluded for readability. See colorbar for value indication.
+                """)
                 # plot component that takes a matplotlib figure as input
-                xai_plot = gr.Plot(
-                    label="Token Level Explanation",
-                    show_label=True,
-                    every=5,
-                )
+                xai_plot = gr.Plot(label="Token Level Explanation", scale=3)
 
     # functions to trigger the controller
-    ## takes information for the chat and the model, xai selection
+    ## takes information for the chat and the xai selection
     ## returns prompt, history and xai data
     ## see backend/controller.py for more information
     submit_btn.click(
         interference,
-        [user_prompt, chatbot, system_prompt, model, xai],
+        [user_prompt, chatbot, knowledge_input, system_prompt, xai_selection],
         [user_prompt, chatbot, xai_interactive, xai_plot],
     )
     # function triggered by the enter key
     user_prompt.submit(
         interference,
-        [user_prompt, chatbot, system_prompt, model, xai],
+        [user_prompt, chatbot, knowledge_input, system_prompt, xai_selection],
         [user_prompt, chatbot, xai_interactive, xai_plot],
     )
 
     # final row to show legal information
     ## - credits, data protection and link to the License
-    with gr.Row():
-        with gr.Accordion("Credits, Data Protection and License", open=False):
-            gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
+    with gr.Tab(label="Credits, Data Protection and License"):
+        gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
 
 # mount function for fastAPI Application
 app = gr.mount_gradio_app(app, ui, path="/")

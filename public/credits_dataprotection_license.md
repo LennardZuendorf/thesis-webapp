@@ -9,19 +9,14 @@
 For full credits, please refer to the [thesis print]()
 
 ### Models
-For this project, two different models are used. Both are used through Huggingface's [transformers](https://huggingface.co/docs/transformers/index) library.
+This implementation is build on GODEL by Microsoft, Inc.
 
-##### LlaMa 2
-LlaMa 2 is an open source model by Meta Research. See [offical paper](https://arxiv.org/pdf/2307.09288.pdf) for more information.
+##### GODEL
+GODEL is an open source model by Microsoft. See [offical paper](https://arxiv.org/abs/2206.11309) for more information.
 
-- the version used in this project is LlaMa 2 7B Chat HF (HF = special version for huggingface), see [huggingface model hub](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)
-- the model is fine-tuned for chat interactions by Meta Research
-
-##### Mistral
-Mistral is an open source model by Mistral AI. See [offical paper](https://arxiv.org/pdf/2310.06825.pdf) for more information.
-
-- the version used in this project is Mistral Instruct, see [huggingface model hub](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1)
-- the model is fine-tuned for instruction following by Mistral AI
+- the version used in this project is GODEL Large, see [huggingface model hub](https://huggingface.co/microsoft/GODEL-v1_1-large-seq2seq?text=Hey+my+name+is+Thomas%21+How+are+you%3F)
+- the model as is a generative seq2seq transformer fine tuned for goal directed dialog
+- it supports context and knowledge base inputs
 
 ### Libraries
 This project uses a number of open source libraries, only the most important ones are listed below.
@@ -29,7 +24,7 @@ This project uses a number of open source libraries, only the most important one
 ##### Shap
 This application uses a custom version of the shap library, which is available at [GitHub](https://github.com/shap/shap).
 
-- please refer to the [shap-adapter](https://github.com/LennardZuendorf/thesis-shap-adapter) repository for more information about the changes made to the library, specifically the README and CHANGES files
+- please refer to the [thesis-custom-shap](https://github.com/LennardZuendorf/thesis-custom-shap) repository for more information about the changes made to the library, specifically the README and CHANGES files
 - the shap library and the used partition SHAP explainer are based on work by Lundberg et al. (2017), see [offical paper](https://arxiv.org/pdf/1705.07874.pdf) for more information
 
 ##### BertViz
@@ -40,10 +35,11 @@ This application uses a slightly customized version of the bertviz library, whic
 
 
 # Data Protection
-This is a non-commercial project, which does not collect any personal data. The only data collected is the data you enter into the application. This data is only used to generate the explanations and is not stored anywhere.
-However, the application may be hosted with an external service (i.e. Huggingface Spaces), which may collect data. Please refer to the data protection policies of the respective service for more information.
+This is a non-commercial research project, which does not collect any personal data. The only data collected is the data you enter into the application. This data is only used to generate the explanations and is not stored anywhere.
 
-If you use the "flag" feature, the data you enter will be stored in *publicly available* csv file.
+> However, the application may be hosted with an external service (i.e. Huggingface Spaces), which may collect data.
+
+Please refer to the data protection policies of the respective service for more information. If you use the "flag" feature, the data you enter will be stored in *publicly available* csv file.
 
 
 # License

@@ -1,6 +1,8 @@
+# configuration for formatting & linting tools
 [tool.black]
 line-length = 88
 include = '\.pyi?$'
+preview = true
 exclude = '''
 /(
     \.eggs

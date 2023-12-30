@@ -17,28 +17,26 @@ app_port: 8080
 
 ## 🔗 Links:
 
-**[Github Repository](https://github.com/LennardZuendorf/thesis)**
+**[Github Repository](https://github.com/LennardZuendorf/thesis-webapp)**
+**[Huggingface Spaces Showcase](https://huggingface.co/spaces/lennardzuendorf/thesis-webapp-docker**
 
 ## 🏗️ Tech Stack:
 
-**Language and Framework:** Python, JupyterNotebook
+**Language and Framework:** Python
 
-**Noteable Packages:** 🤗 Transformers, Gradio, SHAP, BERTViz, Shapash
+**Noteable Packages:** 🤗 Transformers, FastAPI, Gradio, SHAP, BERTViz
 
 ## 👨‍💻 Author and Credits:</h2>
-
 
 **Author:** [@LennardZuendorf](https://github.com/LennardZuendorf)
 
 **Thesis Supervisor**: [Prof. Dr. Simbeck](https://www.htw-berlin.de/hochschule/personen/person/?eid=9862)
 <br> Second Corrector: [Prof. Dr. Hochstein](https://www.htw-berlin.de/hochschule/personen/person/?eid=10628)
 
+See code for in detailed credits, work is based on
 
-See code for in detail credits, work is based on
-
-- Mistral AI
+- GODEL:
 - SHAP:
 - BERTViz:
-
 
 This Project was part of my studies of Business Computing at University of Applied Science for Technology and Business Berlin (HTW Berlin).
