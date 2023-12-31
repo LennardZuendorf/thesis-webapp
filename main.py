@@ -1,11 +1,18 @@
 # main application file initializing the gradio based ui and calling other
+
+# standard imports
+import os
+
 # external imports
 from fastapi import FastAPI
 import markdown
 import gradio as gr
+from uvicorn import run
+
 
 # internal imports
 from backend.controller import interference
+
 
 # Global Variables and css
 app = FastAPI()
@@ -187,7 +194,7 @@ with gr.Blocks(
                 Values have been excluded for readability. See colorbar for value indication.
                 """)
                 # plot component that takes a matplotlib figure as input
-                xai_plot = gr.Plot(label="Token Level Explanation", scale=3)
+                xai_plot = gr.Plot(label="Token Level Explanation")
 
     # functions to trigger the controller
     ## takes information for the chat and the xai selection
@@ -207,16 +214,21 @@ with gr.Blocks(
 
     # final row to show legal information
     ## - credits, data protection and link to the License
-    with gr.Tab(label="Credits, Data Protection and License"):
-        gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
+    with gr.Tab(label="About"):
+        gr.Markdown(value=load_md("public/about.md"))
+        with gr.Accordion(label="Credits, Data Protection, License"):
+            gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
 
 # mount function for fastAPI Application
 app = gr.mount_gradio_app(app, ui, path="/")
 
 # launch function using uvicorn to launch the fastAPI application
 if __name__ == "__main__":
-    from uvicorn import run
 
-    # run the application on port 8080 in reload mode
+    # use standard gradio launch option for hgf spaces
+    if os.environ["HOSTING"].lower() == "spaces":
+        ui.launch(auth=("htw", "berlin@123"))
+
+    # otherwise run the application on port 8080 in reload mode
     ## for local development, uses Docker for Prod deployment
     run("main:app", port=8080, reload=True)

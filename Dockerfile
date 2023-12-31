@@ -3,8 +3,8 @@
 # complete build based on clean python (slower)
 #FROM python:3.11.6
 
-# build based on python with dependencies (quicker) - for dev
-FROM thesis:0.2.0-base
+# build based on thesis base with dependencies (quicker) - for dev
+FROM thesis-base:0.1.1
 
 # install dependencies and copy files into image folder
 COPY requirements.txt .
@@ -16,8 +16,8 @@ COPY . .
 RUN ls --recursive .
 
 # setting config and run command
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 
 # build and run commands:
-## docker build -t thesis:0.2.0-full -f Dockerfile .
-## docker run -d --name thesis -p 8080:8080 thesis:0.2.0
+## docker build -t thesis:0.1.4 -f Dockerfile .
+## docker run -d --name thesis -p 8080:8080 thesis:0.1.4

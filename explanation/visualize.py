@@ -57,28 +57,27 @@ def create_graphic(attention_output, enc_dec_texts: tuple):
     return str(hview.data)
 
 
-# creating an attention heatmap plot using seaborn
+# creating an attention heatmap plot using matplotlib/seaborn
+# CREDIT: adopted from official Matplotlib documentation
+## see https://matplotlib.org/stable/
 def create_plot(attention_output, enc_dec_texts: tuple):
     # get the averaged attention weights
     attention = attention_output.cross_attentions[0][0].detach().numpy()
     averaged_attention_weights = np.mean(attention, axis=0)
+    averaged_attention_weights = np.transpose(averaged_attention_weights)
 
-    # get the encoder and decoder tokens
+    # get the encoder and decoder tokens in text form
     encoder_tokens = enc_dec_texts[0]
     decoder_tokens = enc_dec_texts[1]
 
     # set seaborn style to dark and initialize figure and axis
-    sns.set(style="dark")
+    sns.set(style="white")
     fig, ax = plt.subplots()
-
-    # Making background transparent
-    ax.set_alpha(0)
-    fig.patch.set_alpha(0)
 
     # Setting figure size
     fig.set_size_inches(
         max(averaged_attention_weights.shape[1] * 2, 10),
-        max(averaged_attention_weights.shape[0] / 1.5, 5),
+        max(averaged_attention_weights.shape[0] * 1, 5),
     )
 
     # Plotting the heatmap with seaborn's color palette
@@ -92,19 +91,27 @@ def create_plot(attention_output, enc_dec_texts: tuple):
 
     # Creating colorbar
     cbar = ax.figure.colorbar(im, ax=ax)
-    cbar.ax.set_ylabel("Token Attribution", rotation=-90, va="bottom")
-    cbar.ax.yaxis.set_tick_params(color="white")
-    plt.setp(plt.getp(cbar.ax.axes, "yticklabels"), color="white")
+    cbar.ax.set_ylabel("Attention Weight Scale", rotation=-90, va="bottom")
+    cbar.ax.yaxis.set_tick_params(color="black")
+    plt.setp(plt.getp(cbar.ax.axes, "yticklabels"), color="black")
 
-    # Setting ticks and labels with white color for visibility
-    ax.set_xticks(np.arange(len(encoder_tokens)), labels=encoder_tokens)
-    ax.set_yticks(np.arange(len(decoder_tokens)), labels=decoder_tokens)
-    plt.setp(ax.get_xticklabels(), color="white", rotation=45, ha="right")
-    plt.setp(ax.get_yticklabels(), color="white")
+    # Setting ticks and labels with black color for visibility
+    ax.set_yticks(np.arange(len(encoder_tokens)), labels=encoder_tokens)
+    ax.set_xticks(np.arange(len(decoder_tokens)), labels=decoder_tokens)
+    ax.set_title("Attention Weights by Token")
+    plt.setp(ax.get_xticklabels(), color="black", rotation=45, ha="right")
+    plt.setp(ax.get_yticklabels(), color="black")
 
-    # Adjusting tick labels
-    ax.tick_params(
-        top=True, bottom=False, labeltop=False, labelbottom=True, color="white"
-    )
+    # Adding text annotations with appropriate contrast
+    for i in range(averaged_attention_weights.shape[0]):
+        for j in range(averaged_attention_weights.shape[1]):
+            val = averaged_attention_weights[i, j]
+            color = (
+                "white"
+                if im.norm(averaged_attention_weights.max()) / 2 > im.norm(val)
+                else "black"
+            )
+            ax.text(j, i, f"{val:.4f}", ha="center", va="center", color=color)
 
+    # return the plot
     return plt
