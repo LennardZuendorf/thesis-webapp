@@ -10,6 +10,7 @@ from explanation import interpret, visualize
 
 
 # main interference function that that calls chat functions depending on selections
+# TODO: Limit maximum tokens/model input
 def interference(
     prompt: str,
     history: list,

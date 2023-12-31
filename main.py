@@ -187,7 +187,7 @@ with gr.Blocks(
                 Values have been excluded for readability. See colorbar for value indication.
                 """)
                 # plot component that takes a matplotlib figure as input
-                xai_plot = gr.Plot(label="Token Level Explanation")
+                xai_plot = gr.Plot(label="Token Level Explanation", scale=3)
 
     # functions to trigger the controller
     ## takes information for the chat and the xai selection
@@ -205,12 +205,10 @@ with gr.Blocks(
         [user_prompt, chatbot, xai_interactive, xai_plot],
     )
 
-    # final row to about information
-    ## and credits, data protection and link to the License
-    with gr.Tab(label="About"):
-        gr.Markdown(value=load_md("public/about.md"))
-        with gr.Accordion(label="Credits, Data Protection and License", open=False):
-            gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
+    # final row to show legal information
+    ## - credits, data protection and link to the License
+    with gr.Tab(label="Credits, Data Protection and License"):
+        gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
 
 # mount function for fastAPI Application
 app = gr.mount_gradio_app(app, ui, path="/")
