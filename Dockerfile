@@ -16,7 +16,7 @@ COPY . .
 RUN ls --recursive .
 
 # setting config and run command
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
 
 # build and run commands:
 ## docker build -t thesis:0.2.0-full -f Dockerfile .

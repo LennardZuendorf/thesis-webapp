@@ -3,12 +3,12 @@ title: Thesis
 emoji: 🎓
 colorFrom: red
 colorTo: yellow
-sdk: gradio
+sdk: docker
 sdk_version: 4.7.1
 app_file: main.py
 pinned: true
 license: mit
-app_port: 8080
+app_port: 7860
 ---
 
 # Bachelor Thesis
