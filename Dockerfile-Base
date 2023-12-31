@@ -2,11 +2,11 @@
 # because all dependencies are already installed, the next webapp build using this base image is much quicker
 
 # using newest python as a base image
-FROM python:3.11.6
+FROM thesis-base:0.1.1
 
 # install dependencies based on requirements
 COPY requirements.txt ./
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 # build and run commands
-## docker build -t thesis:0.1.6-base -f Dockerfile-Base .
+## docker build -t thesis-base:1.0.1 -f Dockerfile-Base .
