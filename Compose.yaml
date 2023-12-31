@@ -1,7 +1,0 @@
-version: '3.8'
-
-services:
-  application:
-    build: .
-    ports:
-      - "80:80"

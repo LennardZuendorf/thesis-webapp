@@ -1,0 +1,43 @@
+# workflow file tp build a python app and lint it
+# CREDIT: Adopted from Github Actions Documentation
+## see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python Install and Linting
+
+# runs on every push/pr to any repo and on manual dispatch
+on:
+  push:
+
+  pull_request:
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# jobs to run
+jobs:
+  # main build job that installs dependencies and lints
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # checkout the repository
+    - uses: actions/checkout@v3
+    # set up python 3.10
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    # install dependencies from requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint black
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    # lint and format all files with black (as defined in pyproject.toml)
+    - name: Lint & Fix with Black
+      run: black .
+    # lint with pylint
+    - name: Lint with Pylint
+      run: pylint .

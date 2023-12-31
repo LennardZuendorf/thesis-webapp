@@ -1,4 +1,5 @@
-# Dockerfile to create base image with all needed dependencies
+# Dockerfile to create base image with all needed dependencies. for the quick dockerfile build of the webapp
+# because all dependencies are already installed, the next webapp build using this base image is much quicker
 
 # using newest python as a base image
 FROM python:3.11.6
