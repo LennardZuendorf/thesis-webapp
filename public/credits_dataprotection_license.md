@@ -6,7 +6,6 @@
 
 
 # Credits
-For full credits, please refer to the [thesis print]()
 
 ### Models
 This implementation is build on GODEL by Microsoft, Inc.
