@@ -6,7 +6,7 @@ import gradio as gr
 
 # internal imports
 from model import godel
-from explanation import interpret, visualize
+from explanation import interpret_shap as sint, visualize as viz
 
 
 # main interference function that that calls chat functions depending on selections
@@ -28,9 +28,9 @@ def interference(
     if xai_selection in ("SHAP", "Visualizer"):
         match xai_selection.lower():
             case "shap":
-                xai = interpret
+                xai = sint
             case "visualizer":
-                xai = visualize
+                xai = viz
             case _:
                 # use Gradio warning to display error message
                 gr.Warning(f"""

@@ -75,7 +75,7 @@ with gr.Blocks(
 
                 """)
         # row with columns for the different settings
-        with gr.Row(equal_height=True, variant="compact"):
+        with gr.Row(equal_height=True):
             # column that takes up 3/5 of the row
             with gr.Column(scale=3):
                 # textbox to enter the system prompt
@@ -108,13 +108,15 @@ with gr.Blocks(
                 # accordion to display the normalized input explanation
                 with gr.Accordion(label="Input Explanation", open=False):
                     gr.Markdown("""
-                    #### Input Explanation
-                    The input explanation shows the explanation for the last message
-                    you sent to the AI ChatBot. The explanation is based on the
-                    XAI method you selected.
+                    The explanations are based on 10 buckets that range between the
+                    lowest negative value (1 to 5) and the highest positive attribution value (6 to 10).
+                    **The legend show the color for each bucket.**
                     """)
                     xai_text = gr.HighlightedText(
-                        color_map=coloring, label="Input Explanation", show_legend=True
+                        color_map=coloring,
+                        label="Input Explanation",
+                        show_legend=True,
+                        show_label=False,
                     )
                 # out of the  box chatbot component
                 # see documentation: https://www.gradio.app/docs/chatbot

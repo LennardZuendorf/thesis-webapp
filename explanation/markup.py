@@ -9,7 +9,7 @@ from utils import formatting as fmt
 
 
 def markup_text(input_text: list, text_values: ndarray, variant: str):
-    buckets = 10
+    bucket_tags = ["-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5"]
 
     # Flatten the explanations values
     if variant == "shap":
@@ -21,39 +21,43 @@ def markup_text(input_text: list, text_values: ndarray, variant: str):
 
     # Separate the threshold calculation for negative and positive values
     if variant == "visualizer":
-        thresholds = np.linspace(min_val, max_val, num=buckets, endpoint=False)[1:]
+        neg_thresholds = np.linspace(
+            0, 0, num=(len(bucket_tags) - 1) // 2 + 1, endpoint=False
+        )[1:]
     else:
-        neg_thresholds = np.linspace(min_val, 0, num=buckets // 2 + 1, endpoint=False)[
-            1:
-        ]
-        pos_thresholds = np.linspace(0, max_val, num=buckets // 2 + 1)[1:]
-        thresholds = np.concatenate([neg_thresholds, pos_thresholds])
+        neg_thresholds = np.linspace(
+            min_val, 0, num=(len(bucket_tags) - 1) // 2 + 1, endpoint=False
+        )[1:]
+    pos_thresholds = np.linspace(0, max_val, num=(len(bucket_tags) - 1) // 2 + 1)[1:]
+    thresholds = np.concatenate([neg_thresholds, [0], pos_thresholds])
 
     marked_text = []
 
     # Function to determine the bucket for a given value
     for text, value in zip(input_text, text_values):
-        bucket = 0
-        for i, threshold in enumerate(thresholds, start=1):
-            if value > threshold:
+        bucket = "-5"
+        for i, threshold in zip(bucket_tags, thresholds):
+            if value >= threshold:
                 bucket = i
         marked_text.append((text, str(bucket)))
 
+    print(thresholds)
+    print(marked_text)
     return marked_text
 
 
 def color_codes():
     return {
-        # 1-5: Strong Light Red to Lighter Red
-        "1": "#FF6666",  # Strong Light Red
-        "2": "#FF8080",  # Slightly Lighter Red
-        "3": "#FF9999",  # Intermediate Light Red
-        "4": "#FFB3B3",  # Light Red
-        "5": "#FFCCCC",  # Very Light Red
-        # 6-10: Light Green to Strong Light Green
-        "6": "#B3FFB3",  # Light Green
-        "7": "#99FF99",  # Slightly Stronger Green
-        "8": "#80FF80",  # Intermediate Green
-        "9": "#66FF66",  # Strong Green
-        "10": "#4DFF4D",  # Very Strong Green
+        # 1-5: Strong Light Sky Blue to Lighter Sky Blue
+        "-5": "#3251a8",  # Strong Light Sky Blue
+        "-4": "#5A7FB2",  # Slightly Lighter Sky Blue
+        "-3": "#8198BC",  # Intermediate Sky Blue
+        "-2": "#A8B1C6",  # Light Sky Blue
+        "-1": "#E6F0FF",  # Very Light Sky Blue
+        "0": "#FFFFFF",  # White
+        "+1": "#FFE6F0",  # Lighter Pink
+        "+2": "#DF8CA3",  # Slightly Stronger Pink
+        "+3": "#D7708E",  # Intermediate Pink
+        "+4": "#CF5480",  # Deep Pink
+        "+5": "#A83273",  # Strong Magenta
     }
