@@ -16,4 +16,4 @@ numpy
 matplotlib
 pre-commit
 ipython
-#./components/iframe/dist/gradio_iframe-0.0.1-py3-none-any.whl
+./components/iframe/dist/gradio_iframe-0.0.2-py3-none-any.whl

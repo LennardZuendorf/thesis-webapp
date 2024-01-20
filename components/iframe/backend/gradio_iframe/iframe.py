@@ -17,7 +17,7 @@ class iframe(Component):
     """
     Used to display arbitrary iframe output.
     Preprocessing: this component does *not* accept input.
-    Postprocessing: expects a valid iframe {str}.
+    Postprocessing: expects valid html {str}, which will be turned into an iframe.
 
     Demos: text_analysis
     Guides: key-features

@@ -9,14 +9,14 @@ import markdown
 import gradio as gr
 from uvicorn import run
 
-
 # internal imports
 from backend.controller import interference
-
+from explanation.markup import color_codes
 
 # Global Variables and css
 app = FastAPI()
 css = "body {text-align: start !important;}"
+coloring = color_codes()
 
 
 # different functions to provide frontend abilities
@@ -47,7 +47,10 @@ def xai_info(xai_radio):
 # ui interface based on Gradio Blocks (see documentation:
 # https://www.gradio.app/docs/interface)
 with gr.Blocks(
-    css="text-align: start !important",
+    css="""
+    .examples {text-align: start;}
+    .seperatedRow {border-top: 1rem solid;}",
+    """,
     title="Thesis Webapp Showcase",
     head="<head>",
 ) as ui:
@@ -72,7 +75,7 @@ with gr.Blocks(
 
                 """)
         # row with columns for the different settings
-        with gr.Row(equal_height=True):
+        with gr.Row(equal_height=True, variant="compact"):
             # column that takes up 3/5 of the row
             with gr.Column(scale=3):
                 # textbox to enter the system prompt
@@ -101,44 +104,53 @@ with gr.Blocks(
 
         # row with chatbot ui displaying "conversation" with the model
         with gr.Row(equal_height=True):
-            # out of the  box chatbot component
-            # see documentation: https://www.gradio.app/docs/chatbot
-            chatbot = gr.Chatbot(
-                layout="panel",
-                show_copy_button=True,
-                avatar_images=("./public/human.jpg", "./public/bot.jpg"),
-            )
-        # rows with input textboxes
-        with gr.Row():
-            # textbox to enter the knowledge
-            with gr.Accordion(label="Additional Knowledge", open=False):
-                knowledge_input = gr.Textbox(
-                    value="",
-                    label="Knowledge",
+            with gr.Group(elem_classes="border: 1px solid black;"):
+                # accordion to display the normalized input explanation
+                with gr.Accordion(label="Input Explanation", open=False):
+                    gr.Markdown("""
+                    #### Input Explanation
+                    The input explanation shows the explanation for the last message
+                    you sent to the AI ChatBot. The explanation is based on the
+                    XAI method you selected.
+                    """)
+                    xai_text = gr.HighlightedText(
+                        color_map=coloring, label="Input Explanation", show_legend=True
+                    )
+                # out of the  box chatbot component
+                # see documentation: https://www.gradio.app/docs/chatbot
+                chatbot = gr.Chatbot(
+                    layout="panel",
+                    show_copy_button=True,
+                    avatar_images=("./public/human.jpg", "./public/bot.jpg"),
+                )
+                # textbox to enter the knowledge
+                with gr.Accordion(label="Additional Knowledge", open=False):
+                    knowledge_input = gr.Textbox(
+                        value="",
+                        label="Knowledge",
+                        max_lines=5,
+                        info="Add additional context knowledge.",
+                        show_label=True,
+                    )
+                # textbox to enter the user prompt
+                user_prompt = gr.Textbox(
+                    label="Input Message",
                     max_lines=5,
-                    info="Add additional context knowledge.",
+                    info="""
+                    Ask the ChatBot a question.
+                    Hint: More complicated question give better explanation insights!
+                    """,
                     show_label=True,
                 )
-        with gr.Row():
-            # textbox to enter the user prompt
-            user_prompt = gr.Textbox(
-                label="Input Message",
-                max_lines=5,
-                info="""
-                Ask the ChatBot a question.
-                Hint: More complicated question give better explanation insights!
-                """,
-                show_label=True,
-            )
         # row with columns for buttons to submit and clear content
-        with gr.Row():
+        with gr.Row(elem_classes="border-"):
             with gr.Column(scale=1):
                 # out of the box clear button which clearn the given components (see
                 # documentation: https://www.gradio.app/docs/clearbutton)
                 clear_btn = gr.ClearButton([user_prompt, chatbot])
             with gr.Column(scale=1):
                 submit_btn = gr.Button("Submit", variant="primary")
-        with gr.Row():
+        with gr.Row(elem_classes="examples"):
             gr.Examples(
                 label="Example Questions",
                 examples=[
@@ -177,9 +189,9 @@ with gr.Blocks(
                 """)
         # row that displays the generated explanation of the model (if applicable)
         with gr.Row(variant="panel"):
-            # wraps the explanation html in an iframe to display it interactively
+            # wraps the explanation html to display it statically
             xai_interactive = gr.HTML(
-                label="Interactive Explanation",
+                label="Static Explanation",
                 value=(
                     '<div style="text-align: center"><h4>No Graphic to Display'
                     " (Yet)</h4></div>"
@@ -203,13 +215,13 @@ with gr.Blocks(
     submit_btn.click(
         interference,
         [user_prompt, chatbot, knowledge_input, system_prompt, xai_selection],
-        [user_prompt, chatbot, xai_interactive, xai_plot],
+        [user_prompt, chatbot, xai_interactive, xai_plot, xai_text],
     )
     # function triggered by the enter key
     user_prompt.submit(
         interference,
         [user_prompt, chatbot, knowledge_input, system_prompt, xai_selection],
-        [user_prompt, chatbot, xai_interactive, xai_plot],
+        [user_prompt, chatbot, xai_interactive, xai_plot, xai_text],
     )
 
     # final row to show legal information

@@ -8,12 +8,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gradio_iframe"
-version = "0.0.1"
-description = "iFrame components that wraps html and js code to make them interactive."
+version = "0.0.5"
+description = "Enhanced HTML components that display an interactive iframe element."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.8"
-authors = [{ name = "YOUR NAME", email = "YOUREMAIL@domain.com" }]
+authors = [{ name = "Lennard Zündorf", email = "lennard@zuendorf.me" }]
 keywords = ["gradio-custom-component", "gradio-template-HTML", "HTML", "iFrame"]
 # Add dependencies here
 dependencies = ["gradio>=4.0,<5.0"]
@@ -36,7 +36,7 @@ classifiers = [
 dev = ["build", "twine"]
 
 [tool.hatch.build]
-artifacts = ["/backend/gradio_iframe/templates", "*.pyi", "backend/gradio_iframe/templates"]
+artifacts = ["/backend/gradio_iframe/templates", "*.pyi", "backend/gradio_iframe/templates", "backend/gradio_iframe/templates", "home/lennard/.virtualenvs/thesis/lib/python3.11/site-packages/gradio_iframe/templates", "home/lennard/.virtualenvs/thesis/lib/python3.11/site-packages/gradio_iframe/templates", "home/lennard/.virtualenvs/thesis/lib/python3.11/site-packages/gradio_iframe/templates"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["/backend/gradio_iframe"]

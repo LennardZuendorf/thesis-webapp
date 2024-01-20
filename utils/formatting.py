@@ -2,6 +2,8 @@
 
 # external imports
 import re
+import numpy as np
+from numpy import ndarray
 
 
 # function to format the model reponse nicely
@@ -33,7 +35,17 @@ def format_output_text(output: list):
 # format the tokens by removing special tokens and special characters
 def format_tokens(tokens: list):
     # define special tokens to remove and initialize empty list
-    special_tokens = ["[CLS]", "[SEP]", "[PAD]", "[UNK]", "[MASK]", "▁", "Ġ", "</w>"]
+    special_tokens = [
+        "[CLS]",
+        "[SEP]",
+        "[PAD]",
+        "[UNK]",
+        "[MASK]",
+        "▁",
+        "Ġ",
+        "</w>",
+        "/n",
+    ]
     updated_tokens = []
 
     # loop through tokens
@@ -51,3 +63,8 @@ def format_tokens(tokens: list):
 
     # return the list of tokens
     return updated_tokens
+
+
+# function to flatten values into a 2d list by averaging the explanation values
+def flatten_values(values: ndarray, axis: int = 0):
+    return np.mean(values, axis=axis)

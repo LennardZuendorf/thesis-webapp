@@ -1,13 +1,13 @@
 # visualization module that creates an attention visualization using BERTViz
 
 # external imports
-from bertviz import head_view
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
 # internal imports
 from utils import formatting as fmt
+from .markup import markup_text
 
 
 # plotting function that plots the attention values in a heatmap
@@ -34,36 +34,21 @@ def chat_explained(model, prompt):
         output_attentions=True,
     )
 
+    averaged_attention = avg_attention(attention_output)
+
     # create the response text, graphic and plot
     response_text = fmt.format_output_text(decoder_text)
-    graphic = create_graphic(attention_output, (encoder_text, decoder_text))
-    plot = create_plot(attention_output, (encoder_text, decoder_text))
-    return response_text, graphic, plot
+    plot = create_plot(averaged_attention, (encoder_text, decoder_text))
+    marked_text = markup_text(encoder_text, averaged_attention, variant="visualizer")
 
-
-# creating a html graphic using BERTViz
-def create_graphic(attention_output, enc_dec_texts: tuple):
-
-    # calls the head_view function of BERTViz to return html graphic
-    hview = head_view(
-        encoder_attention=attention_output.encoder_attentions,
-        decoder_attention=attention_output.decoder_attentions,
-        cross_attention=attention_output.cross_attentions,
-        encoder_tokens=enc_dec_texts[0],
-        decoder_tokens=enc_dec_texts[1],
-        html_action="return",
-    )
-
-    return str(hview.data)
+    return response_text, "", plot, marked_text
 
 
 # creating an attention heatmap plot using matplotlib/seaborn
 # CREDIT: adopted from official Matplotlib documentation
 ## see https://matplotlib.org/stable/
-def create_plot(attention_output, enc_dec_texts: tuple):
-    # get the averaged attention weights
-    attention = attention_output.cross_attentions[0][0].detach().numpy()
-    averaged_attention_weights = np.mean(attention, axis=0)
+def create_plot(averaged_attention_weights, enc_dec_texts: tuple):
+    # transpose the attention weights
     averaged_attention_weights = np.transpose(averaged_attention_weights)
 
     # get the encoder and decoder tokens in text form
@@ -115,3 +100,8 @@ def create_plot(attention_output, enc_dec_texts: tuple):
 
     # return the plot
     return plt
+
+
+def avg_attention(attention_values):
+    attention = attention_values.cross_attentions[0][0].detach().numpy()
+    return np.mean(attention, axis=0)

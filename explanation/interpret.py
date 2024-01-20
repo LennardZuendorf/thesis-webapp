@@ -8,6 +8,7 @@ import torch
 
 # internal imports
 from utils import formatting as fmt
+from .markup import markup_text
 
 # global variables
 TEACHER_FORCING = None
@@ -25,11 +26,18 @@ def chat_explained(model, prompt):
 
     # create the explanation graphic and plot
     graphic = create_graphic(shap_values)
-    plot = create_plot(shap_values)
+    plot = create_plot(
+        values=shap_values.values[0],
+        output_names=shap_values.output_names,
+        input_names=shap_values.data[0],
+    )
+    marked_text = markup_text(
+        shap_values.data[0], shap_values.values[0], variant="shap"
+    )
 
     # create the response text
     response_text = fmt.format_output_text(shap_values.output_names)
-    return response_text, graphic, plot
+    return response_text, graphic, plot, marked_text
 
 
 def wrap_shap(model):
@@ -65,10 +73,7 @@ def create_graphic(shap_values):
 # creating an attention heatmap plot using matplotlib/seaborn
 # CREDIT: adopted from official Matplotlib documentation
 ## see https://matplotlib.org/stable/
-def create_plot(shap_values):
-    values = shap_values.values[0]
-    output_names = shap_values.output_names
-    input_names = shap_values.data[0]
+def create_plot(values, output_names, input_names):
 
     # Set seaborn style to dark
     sns.set(style="white")

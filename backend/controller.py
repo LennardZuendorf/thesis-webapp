@@ -40,13 +40,15 @@ def interference(
                 raise RuntimeError("There was an error in the selected XAI approach.")
 
         # call the explained chat function
-        prompt_output, history_output, xai_graphic, xai_plot = explained_chat(
-            model=godel,
-            xai=xai,
-            message=prompt,
-            history=history,
-            system_prompt=system_prompt,
-            knowledge=knowledge,
+        prompt_output, history_output, xai_graphic, xai_plot, xai_markup = (
+            explained_chat(
+                model=godel,
+                xai=xai,
+                message=prompt,
+                history=history,
+                system_prompt=system_prompt,
+                knowledge=knowledge,
+            )
         )
     # if no (or invalid) XAI approach is selected call the vanilla chat function
     else:
@@ -59,16 +61,17 @@ def interference(
             knowledge=knowledge,
         )
         # set XAI outputs to disclaimer html/none
-        xai_graphic, xai_plot = (
+        xai_graphic, xai_plot, xai_markup = (
             """
             <div style="text-align: center"><h4>Without Selected XAI Approach,
             no graphic will be displayed</h4></div>
             """,
             None,
+            [("", "")],
         )
 
     # return the outputs
-    return prompt_output, history_output, xai_graphic, xai_plot
+    return prompt_output, history_output, xai_graphic, xai_plot, xai_markup
 
 
 # simple chat function that calls the model
@@ -95,9 +98,10 @@ def explained_chat(
     prompt = model.format_prompt(message, history, system_prompt, knowledge)
 
     # generating an answer using the xai methods explain and respond function
-    answer, xai_graphic, xai_plot = xai.chat_explained(model, prompt)
+    answer, xai_graphic, xai_plot, xai_markup = xai.chat_explained(model, prompt)
+
     # updating the chat history with the new answer
     history.append((message, answer))
 
     # returning the updated history, xai graphic and xai plot elements
-    return "", history, xai_graphic, xai_plot
+    return "", history, xai_graphic, xai_plot, xai_markup
