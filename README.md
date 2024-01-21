@@ -9,7 +9,7 @@ app_file: main.py
 pinned: true
 license: mit
 app_port: 8080
-models: microsoft/GODEL-v1_1-large-seq2seq
+models: ["microsoft/GODEL-v1_1-large-seq2seq"]
 tags: ["CHAT", "XAI", "SHAP", "GODEL", "Gradio"]
 disable_embedding: true
 ---
