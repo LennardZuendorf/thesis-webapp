@@ -93,7 +93,7 @@ with gr.Blocks(
             with gr.Column(scale=1):
                 # checkbox group to select the xai method
                 xai_selection = gr.Radio(
-                    ["None", "SHAP", "Visualizer"],
+                    ["None", "SHAP", "Attention"],
                     label="XAI Settings",
                     info="Select a XAI Implementation to use.",
                     value="None",

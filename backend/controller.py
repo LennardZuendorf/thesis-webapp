@@ -25,11 +25,11 @@ def interference(
         """
 
     # if a XAI approach is selected, grab the XAI instance
-    if xai_selection in ("SHAP", "Visualizer"):
+    if xai_selection in ("SHAP", "Attention"):
         match xai_selection.lower():
             case "shap":
                 xai = sint
-            case "visualizer":
+            case "attention":
                 xai = viz
             case _:
                 # use Gradio warning to display error message
