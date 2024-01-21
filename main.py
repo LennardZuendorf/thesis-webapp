@@ -200,6 +200,7 @@ with gr.Blocks(
                     '<div style="text-align: center"><h4>No Graphic to Display'
                     " (Yet)</h4></div>"
                 ),
+                height="16rem",
                 show_label=True,
             )
         # row and accordion to display an explanation plot (if applicable)
