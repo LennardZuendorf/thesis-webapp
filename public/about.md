@@ -8,14 +8,13 @@ This research tackles the rise of LLM based applications such a chatbots and exp
 
 - [GitHub Repository](https://github.com/LennardZuendorf/thesis-webapp) - The GitHub repository of this project.
 - [HTW Berlin](https://www.htw-berlin.de/) - The University I have built this project for, as part of my thesis.
-- [Thesis Print]() - Link to the thesis pdf (in English), containing more information about the project. And a full list of sources for this work as well as additional evaluations and fundamental information for the project.
 
 
 ## Implementation
 
-This project is an implementation of PartitionSHAP and BERTViz into GODEL by Microsoft - [GODEL Model](https://huggingface.co/microsoft/GODEL-v1_1-large-seq2seq) which is a generative seq2seq transformer fine-tuned for goal directed dialog. It supports context and knowledge base inputs.
+This project is an implementation of PartitionSHAP into GODEL by Microsoft - [GODEL Model](https://huggingface.co/microsoft/GODEL-v1_1-large-seq2seq) which is a generative seq2seq transformer fine-tuned for goal directed dialog. It supports context and knowledge base inputs.
 
-The UI is build with Gradio.
+The UI is build with Gradio, utilizing some custom components and FastAPI.
 
 ### Usage
 
@@ -39,13 +38,13 @@ Please credit the original authors of this project (Lennard Zündorf) and the cr
 ### Author
 
 - Lennard Zündorf
-- lennard.zuendorf@student.htw-berlin.de
-- [GitHub](https://github.com/LennardZuendorf)
-- [LinkedIn](https://www.zuendorf.me/linkd)
+- [lennard.zuendorf@student.htw-berlin.de](mailto:lennard.zuendorf@student.htw-berlin.de) or [lennard@zuendorf.me](mailto:lennard@zuendorf.me)
+- [GitHub](https://zuendorf.me/github)
+- [LinkedIn](https://zuendorf.me/github)
 
 
 ### University
 Hochschule für Technik und Wirtschaft Berlin (HTW Berlin) - University of Applied Sciences for Engineering and Economics Berlin
 
-1. Supervisor: Prof. Dr. Katarina Simbeck
-2. Supervisor: Prof. Dr. Axel Hochstein
+Supervisor: Prof. Dr. Katarina Simbeck
+2. Corrector : Prof. Dr. Axel Hochstein

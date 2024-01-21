@@ -60,7 +60,7 @@ with gr.Blocks(
         # markdown component to display the header
         gr.Markdown("""
             # Thesis Demo - AI Chat Application with GODEL
-            ## Interpretability powered by SHAP and BERTVIZ
+            Interpretability powered by shap and attention visualization,
             ### Select between tabs below for the different views.
             """)
     # ChatBot tab used to chat with the AI chatbot

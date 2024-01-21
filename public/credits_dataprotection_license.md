@@ -1,7 +1,4 @@
-
-
 # Credits
-For full credits, please refer to the [thesis print]()
 
 ### Models
 This implementation is build on GODEL by Microsoft, Inc.
@@ -10,7 +7,7 @@ This implementation is build on GODEL by Microsoft, Inc.
 GODEL is an open source model by Microsoft. See [offical paper](https://arxiv.org/abs/2206.11309) for more information.
 
 - the version used in this project is GODEL Large, see [huggingface model hub](https://huggingface.co/microsoft/GODEL-v1_1-large-seq2seq?text=Hey+my+name+is+Thomas%21+How+are+you%3F)
-- the model as is a generative seq2seq transformer fine tuned for goal directed dialog
+- the model as is a generative seq2seq transformer fine-tuned for goal directed dialog
 - it supports context and knowledge base inputs
 
 ### Libraries
@@ -19,14 +16,14 @@ This project uses a number of open source libraries, only the most important one
 ##### Shap
 This application uses a custom version of the shap library, which is available at [GitHub](https://github.com/shap/shap).
 
-- please refer to the [thesis-custom-shap](https://github.com/LennardZuendorf/thesis-custom-shap) repository for more information about the changes made to the library, specifically the README and CHANGES files
-- the shap library and the used partition SHAP explainer are based on work by Lundberg et al. (2017), see [offical paper](https://arxiv.org/pdf/1705.07874.pdf) for more information
+- Please refer to the [thesis-shap](https://github.com/LennardZuendorf/thesis-custom-shap) repository for more information about the changes made to the library, specifically the README file.
+- The shap library and the used partition SHAP explainer are based on work by Lundberg et al. (2017), see [offical paper](https://arxiv.org/pdf/1705.07874.pdf) for more information.
 
-##### BertViz
-This application uses a slightly customized version of the bertviz library, which is available at [GitHub](https://github.com/jessevig/bertviz)
+##### Visualizations
+This application uses attention visualization inspired by the bertviz library, which is available at[GitHub](https://github.com/jessevig/bertviz). It doesn't actually use BERTViz.
 
-- the bertviz was introduced by Vig et al. (2019), see [offical paper](https://arxiv.org/pdf/1906.05714.pdf) for more information
-- there are no changes to the library itself, only to the way it is used in this project (adapted to use Mistral/LlaMa 2 instead of BERT)
+- The bertviz was introduced by Vig et al. (2019), see [offical paper](https://arxiv.org/pdf/1906.05714.pdf) for more information.
+- This project only uses cross attention visualization with gradio and matplotlib.
 
 
 # Data Protection
