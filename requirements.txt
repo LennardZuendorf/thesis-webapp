@@ -16,3 +16,4 @@ numpy
 matplotlib
 pre-commit
 ipython
+gradio-iframe

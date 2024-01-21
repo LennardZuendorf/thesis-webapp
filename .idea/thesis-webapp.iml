@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/components/shap-plots/backend" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/components/shap/backend" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/components/visualizer/backend" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/components/iframe/backend" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11.6 WSL (Ubuntu): (/home/lennard/.virtualenvs/thesis/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

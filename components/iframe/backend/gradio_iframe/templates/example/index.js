@@ -1,78 +1,87 @@
 const {
-  SvelteComponent: c,
-  attr: u,
-  detach: r,
+  SvelteComponent: r,
+  append: d,
+  attr: s,
+  detach: u,
   element: o,
-  init: d,
-  insert: g,
+  init: g,
+  insert: m,
   noop: _,
   safe_not_equal: v,
-  toggle_class: s
+  toggle_class: c
 } = window.__gradio__svelte__internal;
 function y(n) {
-  let e;
+  let e, l;
   return {
     c() {
-      e = o("div"), u(e, "class", "prose svelte-180qqaf"), s(
+      e = o("div"), l = o("iframe"), s(l, "title", "iframe component"), s(l, "width", "100%"), s(l, "height", "100%"), s(
+        l,
+        "srcdoc",
+        /*value*/
+        n[0]
+      ), s(l, "allow", ""), s(e, "class", "prose svelte-180qqaf"), c(
         e,
         "table",
         /*type*/
         n[1] === "table"
-      ), s(
+      ), c(
         e,
         "gallery",
         /*type*/
         n[1] === "gallery"
-      ), s(
+      ), c(
         e,
         "selected",
         /*selected*/
         n[2]
       );
     },
-    m(l, t) {
-      g(l, e, t), e.innerHTML = /*value*/
-      n[0];
+    m(t, a) {
+      m(t, e, a), d(e, l);
     },
-    p(l, [t]) {
-      t & /*value*/
-      1 && (e.innerHTML = /*value*/
-      l[0]), t & /*type*/
-      2 && s(
+    p(t, [a]) {
+      a & /*value*/
+      1 && s(
+        l,
+        "srcdoc",
+        /*value*/
+        t[0]
+      ), a & /*type*/
+      2 && c(
         e,
         "table",
         /*type*/
-        l[1] === "table"
-      ), t & /*type*/
-      2 && s(
+        t[1] === "table"
+      ), a & /*type*/
+      2 && c(
         e,
         "gallery",
         /*type*/
-        l[1] === "gallery"
-      ), t & /*selected*/
-      4 && s(
+        t[1] === "gallery"
+      ), a & /*selected*/
+      4 && c(
         e,
         "selected",
         /*selected*/
-        l[2]
+        t[2]
       );
     },
     i: _,
     o: _,
-    d(l) {
-      l && r(e);
+    d(t) {
+      t && u(e);
     }
   };
 }
-function m(n, e, l) {
-  let { value: t } = e, { type: i } = e, { selected: f = !1 } = e;
-  return n.$$set = (a) => {
-    "value" in a && l(0, t = a.value), "type" in a && l(1, i = a.type), "selected" in a && l(2, f = a.selected);
-  }, [t, i, f];
+function h(n, e, l) {
+  let { value: t } = e, { type: a } = e, { selected: f = !1 } = e;
+  return n.$$set = (i) => {
+    "value" in i && l(0, t = i.value), "type" in i && l(1, a = i.type), "selected" in i && l(2, f = i.selected);
+  }, [t, a, f];
 }
-class b extends c {
+class b extends r {
   constructor(e) {
-    super(), d(this, e, m, y, v, { value: 0, type: 1, selected: 2 });
+    super(), g(this, e, h, y, v, { value: 0, type: 1, selected: 2 });
   }
 }
 export {

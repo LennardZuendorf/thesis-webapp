@@ -8,8 +8,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gradio_iframe"
-version = "0.0.5"
-description = "Enhanced HTML components that display an interactive iframe element."
+version = "0.0.3"
+description = "Experimental empowered iFrame component based on existing HTML gradio component."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.8"
@@ -36,7 +36,7 @@ classifiers = [
 dev = ["build", "twine"]
 
 [tool.hatch.build]
-artifacts = ["/backend/gradio_iframe/templates", "*.pyi", "backend/gradio_iframe/templates", "backend/gradio_iframe/templates", "home/lennard/.virtualenvs/thesis/lib/python3.11/site-packages/gradio_iframe/templates", "home/lennard/.virtualenvs/thesis/lib/python3.11/site-packages/gradio_iframe/templates", "home/lennard/.virtualenvs/thesis/lib/python3.11/site-packages/gradio_iframe/templates"]
+artifacts = ["/backend/gradio_iframe/templates", "*.pyi", "backend/gradio_iframe/templates", "home/lennard/.virtualenvs/thesis/lib/python3.11/site-packages/gradio_iframe/templates", "backend/gradio_iframe/templates"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["/backend/gradio_iframe"]

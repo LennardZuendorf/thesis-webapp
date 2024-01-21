@@ -1,14 +1,14 @@
 
 import gradio as gr
-from gradio_iframe import iframe
+from gradio_iframe import iFrame
 
 
-example = iframe().example_inputs()
+example = iFrame().example_inputs()
 
 with gr.Blocks() as demo:
     with gr.Row():
-        iframe(label="Blank"),  # blank component
-        iframe(value=example, label="Populated"),  # populated component
+        iFrame(label="Blank"),  # blank component
+        iFrame(value=example, label="Populated"),  # populated component
 
 
 demo.launch()

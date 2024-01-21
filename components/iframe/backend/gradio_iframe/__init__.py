@@ -1,4 +1,4 @@
 
-from .iframe import iframe
+from .iframe import iFrame
 
-__all__ = ['iframe']
+__all__ = ['iFrame']

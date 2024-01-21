@@ -8,7 +8,6 @@
 	const dispatch = createEventDispatcher<{ change: undefined }>();
 
 	$: value, dispatch("change");
-
 </script>
 
 <div
@@ -16,7 +15,7 @@
 	class:min={min_height}
 	class:hide={!visible}
 >
-	<iframe title="iframe component" width="100%" height="100%" srcdoc={value} allow=""></iframe>
+	<iframe title="iframe component" width="100%" height="100%" srcdoc={value} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
 <style>

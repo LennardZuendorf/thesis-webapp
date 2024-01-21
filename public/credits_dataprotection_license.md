@@ -1,8 +1,3 @@
-# Links
-
-- [GitHub Repository](https://github.com/LennardZuendorf/thesis-webapp) - The GitHub repository of this project.
-- [HTW Berlin](https://www.htw-berlin.de/) - The University I have built this project for, as part of my thesis.
-- [Thesis Print]() - Link to the thesis pdf (in English), containing more information about the project. And a full list of sources for this work as well as additional evaluations and fundamental information for the project.
 
 
 # Credits

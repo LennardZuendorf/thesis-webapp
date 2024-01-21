@@ -41,8 +41,6 @@ def markup_text(input_text: list, text_values: ndarray, variant: str):
                 bucket = i
         marked_text.append((text, str(bucket)))
 
-    print(thresholds)
-    print(marked_text)
     return marked_text
 
 

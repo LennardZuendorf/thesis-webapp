@@ -13,11 +13,11 @@ set_documentation_group("component")
 
 
 @document()
-class iframe(Component):
+class iFrame(Component):
     """
-    Used to display arbitrary iframe output.
+    Used to display abitrary html output.
     Preprocessing: this component does *not* accept input.
-    Postprocessing: expects valid html {str}, which will be turned into an iframe.
+    Postprocessing: expects a valid HTML {str}.
 
     Demos: text_analysis
     Guides: key-features
@@ -44,8 +44,8 @@ class iframe(Component):
             every: If `value` is a callable, run the function 'every' number of seconds while the client connection is open. Has no effect otherwise. Queue must be enabled. The event can be accessed (e.g. to cancel it) via this component's .load_event attribute.
             show_label: This parameter has no effect.
             visible: If False, component will be hidden.
-            elem_id: An optional string that is assigned as the id of this component in the iframe DOM. Can be used for targeting CSS styles.
-            elem_classes: An optional list of strings that are assigned as the classes of this component in the iframe DOM. Can be used for targeting CSS styles.
+            elem_id: An optional string that is assigned as the id of this component in the iFrame DOM. Can be used for targeting CSS styles.
+            elem_classes: An optional list of strings that are assigned as the classes of this component in the iFrame DOM. Can be used for targeting CSS styles.
             render: If False, component will not render be rendered in the Blocks context. Should be used if the intention is to assign event listeners now but render the component later.
         """
         super().__init__(

@@ -8,6 +8,7 @@ from fastapi import FastAPI
 import markdown
 import gradio as gr
 from uvicorn import run
+from gradio_iframe import iFrame
 
 # internal imports
 from backend.controller import interference
@@ -59,7 +60,7 @@ with gr.Blocks(
         # markdown component to display the header
         gr.Markdown("""
             # Thesis Demo - AI Chat Application with GODEL
-            ## XAI powered by SHAP and BERTVIZ
+            ## Interpretability powered by SHAP and BERTVIZ
             ### Select between tabs below for the different views.
             """)
     # ChatBot tab used to chat with the AI chatbot
@@ -72,6 +73,8 @@ with gr.Blocks(
                 Manipulate the settings in the row above,
                 including the selection of the model,
                 the system prompt and the XAI method.
+
+                **See Explanations in the accordion above the chat.**
 
                 """)
         # row with columns for the different settings
@@ -145,7 +148,7 @@ with gr.Blocks(
                     show_label=True,
                 )
         # row with columns for buttons to submit and clear content
-        with gr.Row(elem_classes="border-"):
+        with gr.Row(elem_classes=""):
             with gr.Column(scale=1):
                 # out of the box clear button which clearn the given components (see
                 # documentation: https://www.gradio.app/docs/clearbutton)
@@ -185,14 +188,13 @@ with gr.Blocks(
         with gr.Row():
             gr.Markdown("""
                 ### Get Explanations for Conversations
-                Using your selected XAI method, you can get explanations for
-                the conversation you had with the AI ChatBot. The explanations are
-                based on the last message you sent to the AI ChatBot (see text)
+                Get additional explanations for the last conversation you had with the AI ChatBot.
+                Depending on the selected XAI method, different explanations are available.
                 """)
         # row that displays the generated explanation of the model (if applicable)
         with gr.Row(variant="panel"):
             # wraps the explanation html to display it statically
-            xai_interactive = gr.HTML(
+            xai_interactive = iFrame(
                 label="Static Explanation",
                 value=(
                     '<div style="text-align: center"><h4>No Graphic to Display'
@@ -202,7 +204,7 @@ with gr.Blocks(
             )
         # row and accordion to display an explanation plot (if applicable)
         with gr.Row():
-            with gr.Accordion("Token Explanation Plot", open=False):
+            with gr.Accordion("Token Wise Explanation Plot", open=False):
                 gr.Markdown("""
                 #### Plotted Values
                 Values have been excluded for readability. See colorbar for value indication.
