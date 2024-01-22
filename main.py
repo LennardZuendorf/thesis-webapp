@@ -79,27 +79,29 @@ with gr.Blocks(
                 """)
         # row with columns for the different settings
         with gr.Row(equal_height=True):
-            # column that takes up 3/5 of the row
-            with gr.Column(scale=3):
-                # textbox to enter the system prompt
-                system_prompt = gr.Textbox(
-                    label="System Prompt",
-                    info="Set the models system prompt, dictating how it answers.",
-                    placeholder=(
-                        "You are a helpful, respectful and honest assistant. Always"
-                        " answer as helpfully as possible, while being safe."
-                    ),
-                )
-            with gr.Column(scale=1):
-                # checkbox group to select the xai method
-                xai_selection = gr.Radio(
-                    ["None", "SHAP", "Attention"],
-                    label="XAI Settings",
-                    info="Select a XAI Implementation to use.",
-                    value="None",
-                    interactive=True,
-                    show_label=True,
-                )
+            with gr.Accordion(label="Application Settings", open=False):
+                # column that takes up 3/4 of the row
+                with gr.Column(scale=3):
+                    # textbox to enter the system prompt
+                    system_prompt = gr.Textbox(
+                        label="System Prompt",
+                        info="Set the models system prompt, dictating how it answers.",
+                        placeholder=(
+                            "You are a helpful, respectful and honest assistant. Always"
+                            " answer as helpfully as possible, while being safe."
+                        ),
+                    )
+                # column that takes up 1/4 of the row
+                with gr.Column(scale=1):
+                    # checkbox group to select the xai method
+                    xai_selection = gr.Radio(
+                        ["None", "SHAP", "Attention"],
+                        label="XAI Settings",
+                        info="Select a XAI Implementation to use.",
+                        value="None",
+                        interactive=True,
+                        show_label=True,
+                    )
 
             # calling info functions on inputs for different settings
             system_prompt.submit(system_prompt_info, [system_prompt])
@@ -200,7 +202,6 @@ with gr.Blocks(
                     '<div style="text-align: center"><h4>No Graphic to Display'
                     " (Yet)</h4></div>"
                 ),
-                height="16rem",
                 show_label=True,
             )
         # row and accordion to display an explanation plot (if applicable)
