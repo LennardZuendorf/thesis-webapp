@@ -15,5 +15,5 @@ seaborn~=0.13.0
 numpy
 matplotlib
 pre-commit
-ipython~=0.0.10
-gradio-iframe
+ipython
+gradio-iframe~=0.0.10
