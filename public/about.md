@@ -7,7 +7,7 @@ This research tackles the rise of LLM based applications such a chatbots and exp
 ## Links
 
 - [GitHub Repository](https://github.com/LennardZuendorf/thesis-webapp) - The GitHub repository of this project.
-- [HTW Berlin](https://www.htw-berlin.de/) - The University I have built this project for, as part of my thesis.
+- [HTW Berlin](https://www.htw-berlin.de/en/) - The University I have built this project for, as part of my thesis.
 
 
 ## Implementation

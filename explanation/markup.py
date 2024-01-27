@@ -11,10 +11,13 @@ from utils import formatting as fmt
 def markup_text(input_text: list, text_values: ndarray, variant: str):
     bucket_tags = ["-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5"]
 
-    # Flatten the explanations values
+    # Flatten the values depending on the source
+    # attention is averaged, SHAP summed up
     if variant == "shap":
         text_values = np.transpose(text_values)
-    text_values = fmt.flatten_values(text_values)
+        text_values = fmt.flatten_attribution(text_values)
+    else:
+        text_values = fmt.flatten_attention(text_values)
 
     # Determine the minimum and maximum values
     min_val, max_val = np.min(text_values), np.max(text_values)

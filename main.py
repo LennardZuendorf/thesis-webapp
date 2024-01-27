@@ -180,6 +180,10 @@ with gr.Blocks(
                             " scripts: hieroglyphs, Demotic, and Greek."
                         ),
                     ],
+                    [
+                        "Does money buy happiness?",
+                        ""
+                    ],
                 ],
                 inputs=[user_prompt, knowledge_input],
             )
@@ -197,22 +201,14 @@ with gr.Blocks(
         with gr.Row(variant="panel"):
             # wraps the explanation html to display it statically
             xai_interactive = iFrame(
-                label="Static Explanation",
+                label="Interactive Explanation",
                 value=(
                     '<div style="text-align: center"><h4>No Graphic to Display'
                     " (Yet)</h4></div>"
                 ),
+                height="600px",
                 show_label=True,
             )
-        # row and accordion to display an explanation plot (if applicable)
-        with gr.Row():
-            with gr.Accordion("Token Wise Explanation Plot", open=False):
-                gr.Markdown("""
-                #### Plotted Values
-                Values have been excluded for readability. See colorbar for value indication.
-                """)
-                # plot component that takes a matplotlib figure as input
-                xai_plot = gr.Plot(label="Token Level Explanation")
 
     # functions to trigger the controller
     ## takes information for the chat and the xai selection
@@ -221,13 +217,13 @@ with gr.Blocks(
     submit_btn.click(
         interference,
         [user_prompt, chatbot, knowledge_input, system_prompt, xai_selection],
-        [user_prompt, chatbot, xai_interactive, xai_plot, xai_text],
+        [user_prompt, chatbot, xai_interactive, xai_text],
     )
     # function triggered by the enter key
     user_prompt.submit(
         interference,
         [user_prompt, chatbot, knowledge_input, system_prompt, xai_selection],
-        [user_prompt, chatbot, xai_interactive, xai_plot, xai_text],
+        [user_prompt, chatbot, xai_interactive, xai_text],
     )
 
     # final row to show legal information
