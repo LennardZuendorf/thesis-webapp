@@ -195,7 +195,7 @@ with gr.Blocks(
                 Depending on the selected XAI method, different explanations are available.
                 """)
         # row that displays the generated explanation of the model (if applicable)
-        with gr.Row(variant="panel"):
+        with gr.Row():
             # wraps the explanation html to display it statically
             xai_interactive = iFrame(
                 label="Interactive Explanation",
@@ -203,7 +203,7 @@ with gr.Blocks(
                     '<div style="text-align: center; font-family:arial;"><h4>No Graphic'
                     " to Display (Yet)</h4></div>"
                 ),
-                height="1500px",
+                height="1000px",
                 show_label=True,
             )
 
