@@ -1,9 +1,5 @@
 # visualization module that creates an attention visualization using BERTViz
 
-# external imports
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
 
 # internal imports
 from utils import formatting as fmt
@@ -41,4 +37,3 @@ def chat_explained(model, prompt):
     marked_text = markup_text(encoder_text, averaged_attention, variant="visualizer")
 
     return response_text, "", marked_text
-

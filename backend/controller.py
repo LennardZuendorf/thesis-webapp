@@ -40,15 +40,13 @@ def interference(
                 raise RuntimeError("There was an error in the selected XAI approach.")
 
         # call the explained chat function
-        prompt_output, history_output, xai_graphic, xai_markup = (
-            explained_chat(
-                model=godel,
-                xai=xai,
-                message=prompt,
-                history=history,
-                system_prompt=system_prompt,
-                knowledge=knowledge,
-            )
+        prompt_output, history_output, xai_graphic, xai_markup = explained_chat(
+            model=godel,
+            xai=xai,
+            message=prompt,
+            history=history,
+            system_prompt=system_prompt,
+            knowledge=knowledge,
         )
     # if no (or invalid) XAI approach is selected call the vanilla chat function
     else:

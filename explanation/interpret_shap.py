@@ -1,8 +1,5 @@
 # interpret module that implements the interpretability method
 # external imports
-import seaborn as sns
-import matplotlib.pyplot as plt
-import numpy as np
 from shap import models, maskers, plots, PartitionExplainer
 import torch
 

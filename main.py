@@ -180,10 +180,7 @@ with gr.Blocks(
                             " scripts: hieroglyphs, Demotic, and Greek."
                         ),
                     ],
-                    [
-                        "Does money buy happiness?",
-                        ""
-                    ],
+                    ["Does money buy happiness?", ""],
                 ],
                 inputs=[user_prompt, knowledge_input],
             )

@@ -69,8 +69,10 @@ def format_tokens(tokens: list):
 def flatten_attribution(values: ndarray, axis: int = 0):
     return np.sum(values, axis=axis)
 
+
 def flatten_attention(values: ndarray, axis: int = 0):
     return np.mean(values, axis=axis)
+
 
 def avg_attention(attention_values):
     attention = attention_values.cross_attentions[0][0].detach().numpy()
