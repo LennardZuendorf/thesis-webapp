@@ -16,7 +16,18 @@ from explanation.markup import color_codes
 
 # Global Variables and css
 app = FastAPI()
-css = "body {text-align: start !important;}"
+css = """
+    .examples {text-align: start;}
+    .seperatedRow {border-top: 1rem solid;}",
+    """
+js = """
+    function () {
+        gradioURL = window.location.href
+        if (!gradioURL.endsWith('?__theme=light')) {
+        window.location.replace(gradioURL + '?__theme=light');
+        }
+    }
+    """
 coloring = color_codes()
 
 
@@ -48,10 +59,8 @@ def xai_info(xai_radio):
 # ui interface based on Gradio Blocks (see documentation:
 # https://www.gradio.app/docs/interface)
 with gr.Blocks(
-    css="""
-    .examples {text-align: start;}
-    .seperatedRow {border-top: 1rem solid;}",
-    """,
+    css=css,
+    js=js,
     title="Thesis Webapp Showcase",
     head="<head>",
 ) as ui:
@@ -203,8 +212,8 @@ with gr.Blocks(
                     '<div style="text-align: center; font-family:arial;"><h4>No Graphic'
                     " to Display (Yet)</h4></div>"
                 ),
-                height="1000px",
                 show_label=True,
+                height="400px",
             )
 
     # functions to trigger the controller
