@@ -200,10 +200,10 @@ with gr.Blocks(
             xai_interactive = iFrame(
                 label="Interactive Explanation",
                 value=(
-                    '<div style="text-align: center"><h4>No Graphic to Display'
+                    '<div style="text-align: center; font-family:arial;"><h4>No Graphic to Display'
                     " (Yet)</h4></div>"
                 ),
-                height="600px",
+                height="1500px",
                 show_label=True,
             )
 

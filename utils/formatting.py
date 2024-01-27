@@ -75,5 +75,5 @@ def flatten_attention(values: ndarray, axis: int = 0):
 
 
 def avg_attention(attention_values):
-    attention = attention_values.cross_attentions[0][0].detach().numpy()
+    attention = attention_values.output_attentions[0][0].detach().numpy()
     return np.mean(attention, axis=0)
