@@ -1,10 +1,6 @@
 # visualization module that creates an attention visualization using BERTViz
 
 
-# external imports
-from bertviz import neuron_view as nv
-
-
 # internal imports
 from utils import formatting as fmt
 from .markup import markup_text
@@ -38,30 +34,10 @@ def chat_explained(model, prompt):
 
     # create the response text and marked text for ui
     response_text = fmt.format_output_text(decoder_text)
-    xai_graphic = attention_graphic(encoder_text, decoder_text, model)
+    graphic = (
+        "<div style='text-align: center; font-family:arial;'><h4>Attention"
+        " Visualization doesn't support an interactive graphic.</h4></div>"
+    )
     marked_text = markup_text(encoder_text, averaged_attention, variant="visualizer")
 
-    return response_text, xai_graphic, marked_text
-
-
-def attention_graphic(encoder_text, decoder_text, model):
-
-    # set model type to BERT (to fake out BERTViz)
-    model_type = "bert"
-
-    # create sentence a and b from list of strings
-    sentence_a = " ".join(encoder_text)
-    sentence_b = " ".join(decoder_text)
-
-    # display neuron view
-    return nv.show(
-        model.MODEL,
-        model_type,
-        model.TOKENIZER,
-        sentence_a,
-        sentence_b,
-        display_mode="light",
-        layer=2,
-        head=0,
-        html_action="return",
-    )
+    return response_text, graphic, marked_text

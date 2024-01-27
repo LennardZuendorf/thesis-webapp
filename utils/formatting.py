@@ -35,17 +35,7 @@ def format_output_text(output: list):
 # format the tokens by removing special tokens and special characters
 def format_tokens(tokens: list):
     # define special tokens to remove and initialize empty list
-    special_tokens = [
-        "[CLS]",
-        "[SEP]",
-        "[PAD]",
-        "[UNK]",
-        "[MASK]",
-        "▁",
-        "Ġ",
-        "</w>",
-        "/n",
-    ]
+    special_tokens = ["[CLS]", "[SEP]", "[PAD]", "[UNK]", "[MASK]", "▁", "Ġ", "</w>"]
     updated_tokens = []
 
     # loop through tokens
