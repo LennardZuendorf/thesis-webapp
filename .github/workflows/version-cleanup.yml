@@ -1,8 +1,6 @@
-# Docker image build and publish workflow
-# CREDIT: Adopted from
-name: Docker Build & Publish
+name: Version Cleanup
 
-# running on every release and on manual dispatch
+# running on manual dispatch
 on:
   workflow_dispatch:
 
