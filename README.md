@@ -44,30 +44,28 @@ This Project was part of my studies of Business Computing at the University of A
 
 ##  Running the Project:
 
-### 🐍 Python:
-
+### 🐍 Python with [FastAPI](https://fastapi.tiangolo.com/) :
 (This assumes you have set up a python environment, I recommend using a virtual environment.)
 
 1. Clone the repository using git or GitHub cli.
 2. Start the (virtual) environment.
+3. Set the environment variable "HOSTING", i.e. like this `export HOSTING="local"`, see [fastAPI Docu](https://fastapi.tiangolo.com/advanced/settings/)
 3. Install the requirements using `pip install -r requirements.txt`
 4. Run the app using `uvicorn main:app`. You can add `--reload` to enable hot reloading. The app will be available at `localhost:8000`.
 
-### 🐳 Dockerfile:
-
+### 🐳 Dockerfile :
 (This assumes you have set up docker desktop or are using a hosting service able to handle Dockerfiles.)
 
 1. Clone the repository using git or GitHub cli.
-2. Build the docker image using `docker build -t thesis-webapp .`, the command commented in the docker file or the command referenced by your hosting service.
-3. Run the docker image using `docker run -p 8080:8080 thesis-webapp`, the command commented in the docker file or the command referenced by your hosting service.
+2. Build the docker image using `docker build -t thesis-webapp -f Dockerfile . .`, the command commented in the docker file or the command referenced by your hosting service.
+3. Run the docker image using `docker run --name thesis-webapp -e HOSTING=local -p 8080:8080 thesis-webapp`, the command commented in the docker file or the command referenced by your hosting service.
 4. The app will be available at `localhost:8080`. If you are using a hosting service, the port may be different.
 
-### 🐳 Docker Image:
-
+### 🐳 Docker Image :
 (This assumes you have set up docker desktop or are using a hosting service able to handle Docker images.)
 
 1. Pull the docker image from ghcr using `docker pull ghcr.io/LennardZuendorf/thesis-webapp:latest`.
-2. Run the docker image using `docker run -p 8080:8080 lennardzuendorf/thesis-webapp:latest`, the command commented in the docker file or the command referenced by your hosting service.
+2. Run the docker image in terminal using `docker run --name thesis-webapp -e HOSTING=local -p 8080:8080 lennardzuendorf/thesis-webapp:latest`, the command commented in the docker file or the command referenced by your hosting service.
 3. The app will be available at `localhost:8080`. If you are using a hosting service, the port may be different.
 
 ## 📝 License and Credits:

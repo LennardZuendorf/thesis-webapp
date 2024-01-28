@@ -19,5 +19,5 @@ RUN ls --recursive .
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 
 # build and run commands:
-## docker build -t thesis:0.1.4 -f Dockerfile .
-## docker run -d --name thesis -p 8080:8080 thesis:0.1.4
+## docker build -t thesis:1.2.1 -f Dockerfile .
+## docker run -d --name thesis -e HOSTING=local -p 8080:8080 thesis:1.2.1
