@@ -6,21 +6,28 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 # internal imports
 from utils import modelling as mdl
 
-# model and tokenizer instance
+# global model and tokenizer instance (created on inital build)
 TOKENIZER = AutoTokenizer.from_pretrained("microsoft/GODEL-v1_1-large-seq2seq")
 MODEL = AutoModelForSeq2SeqLM.from_pretrained("microsoft/GODEL-v1_1-large-seq2seq")
+
+# default model config
 CONFIG = {"max_new_tokens": 50, "min_length": 8, "top_p": 0.9, "do_sample": True}
 
 
-# TODO: Make config variable
-def set_config(config: dict = None):
-    if config is None:
-        config = {}
+# function to (re) set config
+def set_config(config: dict):
+    global CONFIG
 
-    MODEL.config.max_new_tokens = 50
-    MODEL.config.min_length = 8
-    MODEL.config.top_p = 0.9
-    MODEL.config.do_sample = True
+    # if config dict is given, update it
+    if config != {}:
+        CONFIG = config
+    else:
+        # hard setting model config to default
+        # needed for shap
+        MODEL.config.max_new_tokens = 50
+        MODEL.config.min_length = 8
+        MODEL.config.top_p = 0.9
+        MODEL.config.do_sample = True
 
 
 # formatting class to formatting input for the model
@@ -56,8 +63,12 @@ def format_prompt(message: str, history: list, system_prompt: str, knowledge: st
 # CREDIT: Copied from official interference example on Huggingface
 ## see https://huggingface.co/microsoft/GODEL-v1_1-large-seq2seq
 def respond(prompt):
+    # tokenizing input string
     input_ids = TOKENIZER(f"{prompt}", return_tensors="pt").input_ids
+
+    # generating using config and decoding output
     outputs = MODEL.generate(input_ids, **CONFIG)
     output = TOKENIZER.decode(outputs[0], skip_special_tokens=True)
 
+    # returns the model output string
     return output

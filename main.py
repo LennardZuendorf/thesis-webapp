@@ -14,13 +14,21 @@ from gradio_iframe import iFrame
 from backend.controller import interference
 from explanation.markup import color_codes
 
-# Global Variables and css
+
+# global Variables and js/css
+# creating FastAPI app and getting color codes
 app = FastAPI()
+coloring = color_codes()
+
+
+# defining custom css and js for certain environments
 css = """
     .examples {text-align: start;}
     .seperatedRow {border-top: 1rem solid;}",
     """
-js = """
+# custom js to force lightmode in custom environments
+if os.environ["HOSTING"].lower() != "spaces":
+    js = """
     function () {
         gradioURL = window.location.href
         if (!gradioURL.endsWith('?__theme=light')) {
@@ -28,7 +36,8 @@ js = """
         }
     }
     """
-coloring = color_codes()
+else:
+    js = ""
 
 
 # different functions to provide frontend abilities
@@ -56,8 +65,8 @@ def xai_info(xai_radio):
         gr.Info("No XAI method was selected.")
 
 
-# ui interface based on Gradio Blocks (see documentation:
-# https://www.gradio.app/docs/interface)
+# ui interface based on Gradio Blocks
+# see https://www.gradio.app/docs/interface)
 with gr.Blocks(
     css=css,
     js=js,
@@ -88,6 +97,7 @@ with gr.Blocks(
                 """)
         # row with columns for the different settings
         with gr.Row(equal_height=True):
+            # accordion that extends if clicked
             with gr.Accordion(label="Application Settings", open=False):
                 # column that takes up 3/4 of the row
                 with gr.Column(scale=3):
@@ -95,6 +105,7 @@ with gr.Blocks(
                     system_prompt = gr.Textbox(
                         label="System Prompt",
                         info="Set the models system prompt, dictating how it answers.",
+                        # default system prompt is set to this in the backend
                         placeholder=(
                             "You are a helpful, respectful and honest assistant. Always"
                             " answer as helpfully as possible, while being safe."
@@ -105,26 +116,29 @@ with gr.Blocks(
                     # checkbox group to select the xai method
                     xai_selection = gr.Radio(
                         ["None", "SHAP", "Attention"],
-                        label="XAI Settings",
-                        info="Select a XAI Implementation to use.",
+                        label="Interpretability Settings",
+                        info="Select a Interpretability Implementation to use.",
                         value="None",
                         interactive=True,
                         show_label=True,
                     )
 
-            # calling info functions on inputs for different settings
+            # calling info functions on inputs/submits for different settings
             system_prompt.submit(system_prompt_info, [system_prompt])
             xai_selection.input(xai_info, [xai_selection])
 
         # row with chatbot ui displaying "conversation" with the model
         with gr.Row(equal_height=True):
+            # group to display components closely together
             with gr.Group(elem_classes="border: 1px solid black;"):
                 # accordion to display the normalized input explanation
                 with gr.Accordion(label="Input Explanation", open=False):
                     gr.Markdown("""
                     The explanations are based on 10 buckets that range between the
                     lowest negative value (1 to 5) and the highest positive attribution value (6 to 10).
-                    **The legend show the color for each bucket.**
+                    **The legend shows the color for each bucket.**
+                                
+                    *HINT*: This works best in light mode.
                     """)
                     xai_text = gr.HighlightedText(
                         color_map=coloring,
@@ -132,15 +146,19 @@ with gr.Blocks(
                         show_legend=True,
                         show_label=False,
                     )
-                # out of the  box chatbot component
+                # out of the  box chatbot component with avatar images
                 # see documentation: https://www.gradio.app/docs/chatbot
                 chatbot = gr.Chatbot(
                     layout="panel",
                     show_copy_button=True,
                     avatar_images=("./public/human.jpg", "./public/bot.jpg"),
                 )
-                # textbox to enter the knowledge
+                # extenable components for extra knowledge
                 with gr.Accordion(label="Additional Knowledge", open=False):
+                    gr.Markdown(
+                        "*Hint:* Add extra knowledge to see GODEL work the best."
+                    )
+                    # textbox to enter the knowledge
                     knowledge_input = gr.Textbox(
                         value="",
                         label="Knowledge",
@@ -149,24 +167,31 @@ with gr.Blocks(
                         show_label=True,
                     )
                 # textbox to enter the user prompt
+                gr.Markdown(
+                    "*Hint:* More complicated question give better explanation"
+                    " insights!"
+                )
                 user_prompt = gr.Textbox(
                     label="Input Message",
                     max_lines=5,
                     info="""
                     Ask the ChatBot a question.
-                    Hint: More complicated question give better explanation insights!
                     """,
                     show_label=True,
                 )
         # row with columns for buttons to submit and clear content
         with gr.Row(elem_classes=""):
-            with gr.Column(scale=1):
+            with gr.Column():
                 # out of the box clear button which clearn the given components (see
-                # documentation: https://www.gradio.app/docs/clearbutton)
+                # see: https://www.gradio.app/docs/clearbutton)
                 clear_btn = gr.ClearButton([user_prompt, chatbot])
-            with gr.Column(scale=1):
+            with gr.Column():
+                # submit button that calls the backend functions on click
                 submit_btn = gr.Button("Submit", variant="primary")
+        # row with content examples that get autofilled on click
         with gr.Row(elem_classes="examples"):
+            # examples util component
+            # see: https://www.gradio.app/docs/examples
             gr.Examples(
                 label="Example Questions",
                 examples=[
@@ -235,18 +260,21 @@ with gr.Blocks(
     # final row to show legal information
     ## - credits, data protection and link to the License
     with gr.Tab(label="About"):
+        # load about.md markdown
         gr.Markdown(value=load_md("public/about.md"))
         with gr.Accordion(label="Credits, Data Protection, License"):
+            # load credits and dataprotection markdown
             gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
 
 # mount function for fastAPI Application
 app = gr.mount_gradio_app(app, ui, path="/")
 
-# launch function using uvicorn to launch the fastAPI application
+# launch function to launch the application
 if __name__ == "__main__":
 
     # use standard gradio launch option for hgf spaces
     if os.environ["HOSTING"].lower() == "spaces":
+        # set password to deny public access
         ui.launch(auth=("htw", "berlin@123"))
 
     # otherwise run the application on port 8080 in reload mode

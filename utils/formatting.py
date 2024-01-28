@@ -7,8 +7,10 @@ from numpy import ndarray
 
 
 # function to format the model reponse nicely
+# takes a list of strings and returnings a combined string
 def format_output_text(output: list):
-    # remove special tokens from list
+
+    # remove special tokens from list using other function
     formatted_output = format_tokens(output)
 
     # start string with first list item if it is not empty
@@ -34,8 +36,10 @@ def format_output_text(output: list):
 
 # format the tokens by removing special tokens and special characters
 def format_tokens(tokens: list):
-    # define special tokens to remove and initialize empty list
+    # define special tokens to remove
     special_tokens = ["[CLS]", "[SEP]", "[PAD]", "[UNK]", "[MASK]", "▁", "Ġ", "</w>"]
+
+    # initialize empty list
     updated_tokens = []
 
     # loop through tokens
@@ -44,7 +48,7 @@ def format_tokens(tokens: list):
         if t.startswith("▁"):
             t = t.lstrip("▁")
 
-        # loop through special tokens and remove them if found
+        # loop through special tokens list and remove from current token if matched
         for s in special_tokens:
             t = t.replace(s, "")
 
@@ -55,15 +59,17 @@ def format_tokens(tokens: list):
     return updated_tokens
 
 
-# function to flatten values into a 2d list by averaging the explanation values
+# function to flatten shap values into a 2d list by summing them up
 def flatten_attribution(values: ndarray, axis: int = 0):
     return np.sum(values, axis=axis)
 
 
+# function to flatten values into a 2d list by averaging the attention values
 def flatten_attention(values: ndarray, axis: int = 0):
     return np.mean(values, axis=axis)
 
 
+# function to get averaged decoder attention from attention values
 def avg_attention(attention_values):
     attention = attention_values.decoder_attentions[0][0].detach().numpy()
     return np.mean(attention, axis=0)

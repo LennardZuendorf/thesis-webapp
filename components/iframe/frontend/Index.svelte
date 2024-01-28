@@ -1,3 +1,5 @@
+# index component that wraps the custom iFrame ("HTML")
+
 <script lang="ts">
 	import type { Gradio } from "@gradio/utils";
 	import HTML from "./shared/HTML.svelte";
@@ -10,6 +12,7 @@
 	export let elem_classes: string[] = [];
 	export let visible = true;
 	export let value = "";
+	# updated to take custom heigth
 	export let height: string;
 	export let width: string = "100%";
 	export let loading_status: LoadingStatus;

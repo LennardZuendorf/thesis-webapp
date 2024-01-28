@@ -80,6 +80,7 @@ This project is licensed under the MIT License, see [LICENSE](LICENSE.md) for mo
 - University: HTW Berlin
 
 See code for in detailed credits, work is strongly based on:
+
 #### GODEL
 - [HGF Model Page](https://huggingface.co/microsoft/GODEL-v1_1-large-seq2seq?text=Hey+my+name+is+Mariama%21+How+are+you%3F)
 - [Paper on HGF](https://huggingface.co/papers/2206.11309)
@@ -88,3 +89,7 @@ See code for in detailed credits, work is strongly based on:
 #### SHAP
 - [Github](https://github.com/shap/shap)
 - [Inital Paper](https://arxiv.org/abs/1705.07874)
+
+#### Custom Component (/components/iframe/)
+
+Is based on Gradio component, see indivdual README for full changelog.

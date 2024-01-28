@@ -1,21 +1,26 @@
-# visualization module that creates an attention visualization using BERTViz
+# visualization module that creates an attention visualization
 
 
 # internal imports
 from utils import formatting as fmt
+from model.godel import CONFIG
 from .markup import markup_text
 
 
-# plotting function that plots the attention values in a heatmap
+# chat function that returns an answer
+# and marked text based on attention
 def chat_explained(model, prompt):
 
-    model.set_config()
-
-    # get encoded input and output vectors
+    # get encoded input
     encoder_input_ids = model.TOKENIZER(
         prompt, return_tensors="pt", add_special_tokens=True
     ).input_ids
-    decoder_input_ids = model.MODEL.generate(encoder_input_ids, output_attentions=True)
+    # generate output together with attentions of the model
+    decoder_input_ids = model.MODEL.generate(
+        encoder_input_ids, output_attentions=True, **CONFIG
+    )
+
+    # get input and output text as list of strings
     encoder_text = fmt.format_tokens(
         model.TOKENIZER.convert_ids_to_tokens(encoder_input_ids[0])
     )
@@ -24,20 +29,25 @@ def chat_explained(model, prompt):
     )
 
     # get attention values for the input and output vectors
+    # using already generated input and output
     attention_output = model.MODEL(
         input_ids=encoder_input_ids,
         decoder_input_ids=decoder_input_ids,
         output_attentions=True,
     )
 
+    # averaging attention across layers
     averaged_attention = fmt.avg_attention(attention_output)
 
-    # create the response text and marked text for ui
+    # format response text for clean output
     response_text = fmt.format_output_text(decoder_text)
+    # setting placeholder for iFrame graphic
     graphic = (
         "<div style='text-align: center; font-family:arial;'><h4>Attention"
         " Visualization doesn't support an interactive graphic.</h4></div>"
     )
+    # creating marked text using markup_text function and attention
     marked_text = markup_text(encoder_text, averaged_attention, variant="visualizer")
 
+    # returning response, graphic and marked text array
     return response_text, graphic, marked_text

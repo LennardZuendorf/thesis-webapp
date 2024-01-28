@@ -1,3 +1,5 @@
+# HTML component that implements custom iFrame
+
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	export let elem_classes: string[] = [];
@@ -5,6 +7,7 @@
 	export let visible = true;
 	export let min_height = false;
 
+	# default setting height and width
 	export let height = "100%";
 	export let width = "100%";
 
@@ -12,10 +15,14 @@
 
 	let iframeElement;
 
+	# custom function to update iFrame height on load of HTML
     const onLoad = () => {
 		try {
+			# calling iFrame document
 			const iframeDocument = iframeElement.contentDocument || iframeElement.contentWindow.document;
+			# if heigth not custom, setting height individually
 			if (height === "100%") {
+				# grabbing height from iFrame document
 				const height = iframeDocument.documentElement.scrollHeight;
 				iframeElement.style.height = `${height}px`;
 			}
@@ -33,6 +40,7 @@
 	class:hide={!visible}
 	class:height={height}
 >
+	# updated to use Iframe instead of HTML, using string values with srcdoc
     <iframe
         bind:this={iframeElement}
         title="iframe component"

@@ -1,26 +1,28 @@
-# module for modelling utilities
+# modelling util module providing formatting functions for model functionalities
 
 # external imports
 import gradio as gr
 
 
+# function that limits the prompt to contain model runtime
+# tries to keep as much as possible, always keeping at least message and system prompt
 def prompt_limiter(
     tokenizer, message: str, history: list, system_prompt: str, knowledge: str = ""
 ):
-    # initializing the prompt history empty
+    # initializing the new prompt history empty
     prompt_history = []
-    # getting the token count for the message, system prompt, and knowledge
+    # getting the current token count for the message, system prompt, and knowledge
     pre_count = (
         token_counter(tokenizer, message)
         + token_counter(tokenizer, system_prompt)
         + token_counter(tokenizer, knowledge)
     )
 
-    # validating the token count
-    # check if token count already too high
+    # validating the token count against threshold of 1024
+    # check if token count already too high without history
     if pre_count > 1024:
 
-        # check if token count too high even without knowledge
+        # check if token count too high even without knowledge and history
         if (
             token_counter(tokenizer, message) + token_counter(tokenizer, system_prompt)
             > 1024
@@ -32,11 +34,14 @@ def prompt_limiter(
                 "Message and system prompt are too long. Please shorten them."
             )
 
-        # show warning and remove knowledge
-        gr.Warning("Knowledge is too long. It has been removed to keep model running.")
+        # show warning and return with empty history and empty knowledge
+        gr.Warning("""
+                   Input too long.
+                   Knowledge and conversation history have been removed to keep model running.
+                   """)
         return message, prompt_history, system_prompt, ""
 
-    # if token count small enough, add history
+    # if token count small enough, adding history bit by bit
     if pre_count < 800:
         # setting the count to the precount
         count = pre_count
@@ -46,7 +51,7 @@ def prompt_limiter(
         # iterating through the history
         for conversation in history:
 
-            # checking the token count with the current conversation
+            # checking the token count i´with the current conversation
             count += token_counter(tokenizer, conversation[0]) + token_counter(
                 tokenizer, conversation[1]
             )
@@ -57,7 +62,7 @@ def prompt_limiter(
             else:
                 break
 
-    # return the message, prompt history, system prompt, and knowledge
+    # return the message, adapted, system prompt, and knowledge
     return message, prompt_history, system_prompt, knowledge
 
 
