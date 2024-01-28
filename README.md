@@ -17,7 +17,7 @@ disable_embedding: true
 # Bachelor Thesis Webapp
 
 ## 📜 Info:
-This is the ui showcase for my thesis about interpretability in a LLM based chatbot application and applications of XAI.
+This is the UI showcase for my thesis about the interpretability of LLM based chatbot application and applications of XAI.
 
 ### 🔗 Links:
 
@@ -40,7 +40,7 @@ This is the ui showcase for my thesis about interpretability in a LLM based chat
 **Thesis Supervisor: [Prof. Dr. Simbeck](https://www.htw-berlin.de/hochschule/personen/person/?eid=9862)**
 <br> Second Corrector: [Prof. Dr. Hochstein](https://www.htw-berlin.de/hochschule/personen/person/?eid=10628)
 
-This Project was part of my studies of Business Computing at University of Applied Science for Technology and Business Berlin (HTW Berlin).
+This Project was part of my studies of Business Computing at the University of Applied Science for Technology and Business Berlin (HTW Berlin).
 
 ##  Running the Project:
 
