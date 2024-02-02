@@ -3,7 +3,6 @@
 
 # internal imports
 from utils import formatting as fmt
-from model.model import CONFIG
 from .markup import markup_text
 
 
@@ -17,7 +16,7 @@ def chat_explained(model, prompt):
     ).input_ids
     # generate output together with attentions of the model
     decoder_input_ids = model.MODEL.generate(
-        encoder_input_ids, output_attentions=True, **CONFIG
+        encoder_input_ids, output_attentions=True, **model.CONFIG
     )
 
     # get input and output text as list of strings
