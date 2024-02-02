@@ -25,6 +25,7 @@ else:
     MODEL = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
     MODEL.to(device)
 TOKENIZER = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+TOKENIZER.pad_token=TOKENIZER.eos_token
 
 # default model config
 CONFIG = GenerationConfig.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
@@ -93,7 +94,7 @@ def format_answer(answer: str):
     formatted_answer = ""
 
     if type(answer) == list:
-        answer = fmt.format_output_text
+        answer = fmt.format_output_text(answer)
 
     # extracting text after INST tokens
     parts = answer.split("[/INST]")
@@ -116,4 +117,4 @@ def respond(prompt: str):
     output_ids = MODEL.generate(input_ids, generation_config=CONFIG)
     output_text = TOKENIZER.batch_decode(output_ids)
 
-    return format_answer(output_text)
+    return fmt.format_output_text(output_text)
