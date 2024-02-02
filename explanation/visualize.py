@@ -3,7 +3,7 @@
 
 # internal imports
 from utils import formatting as fmt
-from model.godel import CONFIG
+from model.model import CONFIG
 from .markup import markup_text
 
 

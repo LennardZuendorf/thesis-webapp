@@ -18,7 +18,7 @@ def markup_text(input_text: list, text_values: ndarray, variant: str):
     if variant == "shap":
         text_values = np.transpose(text_values)
         text_values = fmt.flatten_attribution(text_values)
-    else:
+    elif variant == "visualizer":
         text_values = fmt.flatten_attention(text_values)
 
     # Determine the minimum and maximum values

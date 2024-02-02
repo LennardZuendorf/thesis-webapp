@@ -6,6 +6,8 @@ import gradio as gr
 
 # internal imports
 from model import godel
+from model import mistral
+from utils import modelling as mdl
 from explanation import interpret_shap as shap_int, visualize as viz
 
 
@@ -17,13 +19,19 @@ def interference(
     knowledge: str,
     system_prompt: str,
     xai_selection: str,
+    model_selection: str,
 ):
     # if no proper system prompt is given, use a default one
-    if system_prompt in ('', ' '):
+    if system_prompt in ("", " "):
         system_prompt = """
             You are a helpful, respectful and honest assistant.
             Always answer as helpfully as possible, while being safe.
         """
+
+    if model_selection.lower == "mistral":
+        model = mistral
+    else:
+        model = godel
 
     # if a XAI approach is selected, grab the XAI module instance
     if xai_selection in ("SHAP", "Attention"):
@@ -44,7 +52,7 @@ def interference(
 
         # call the explained chat function with the model instance
         prompt_output, history_output, xai_graphic, xai_markup = explained_chat(
-            model=godel,
+            model=model,
             xai=xai,
             message=prompt,
             history=history,
@@ -55,7 +63,7 @@ def interference(
     else:
         # call the vanilla chat function
         prompt_output, history_output = vanilla_chat(
-            model=godel,
+            model=model,
             message=prompt,
             history=history,
             system_prompt=system_prompt,
@@ -95,6 +103,9 @@ def explained_chat(
     model, xai, message: str, history: list, system_prompt: str, knowledge: str = ""
 ):
     # formatting the prompt using the model's format_prompt function
+    message, history, system_prompt, knowledge = mdl.prompt_limiter(
+        message, history, system_prompt, knowledge
+    )
     prompt = model.format_prompt(message, history, system_prompt, knowledge)
 
     # generating an answer using the methods chat function

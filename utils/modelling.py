@@ -1,7 +1,9 @@
 # modelling util module providing formatting functions for model functionalities
 
 # external imports
+import torch
 import gradio as gr
+from transformers import BitsAndBytesConfig
 
 
 # function that limits the prompt to contain model runtime
@@ -72,3 +74,26 @@ def token_counter(tokenizer, text: str):
     tokens = tokenizer(text, return_tensors="pt").input_ids
     # return the token count
     return len(tokens[0])
+
+
+def get_device():
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+
+    return device
+
+
+# setting device based on available hardware
+def gpu_loading_config(max_memory: str = "15000MB"):
+    n_gpus = torch.cuda.device_count()
+
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_use_double_quant=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.bfloat16,
+    )
+
+    return n_gpus, max_memory, bnb_config
