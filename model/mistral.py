@@ -115,6 +115,5 @@ def respond(prompt: str):
     # generating text with tokenized input, returning output
     output_ids = MODEL.generate(input_ids, generation_config=CONFIG)
     output_text = TOKENIZER.batch_decode(output_ids)
-    output_text.fo
 
     return format_answer(output_text)
