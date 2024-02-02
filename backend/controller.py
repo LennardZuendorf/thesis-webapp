@@ -3,6 +3,7 @@
 
 # external imports
 import gradio as gr
+from loguru import logger
 
 # internal imports
 from model import godel
@@ -31,17 +32,19 @@ def interference(
             Always answer as helpfully as possible, while being safe.
         """
 
-    if model_selection.lower == "mistral":
+    if model_selection.lower() == "mistral":
         model = mistral
+        logger.debug("Indetified model as Mistral")
     else:
         model = godel
+        logger.debug("Indetified model as GODEL")
 
     # if a XAI approach is selected, grab the XAI module instance
     if xai_selection in ("SHAP", "Attention"):
         # matching selection
         match xai_selection.lower():
             case "shap":
-                if model_selection.lower == "mistral":
+                if model_selection.lower() == "mistral":
                     xai = cpt_int
                 else:
                     xai = shap_int
@@ -93,6 +96,8 @@ def interference(
 def vanilla_chat(
     model, message: str, history: list, system_prompt: str, knowledge: str = ""
 ):
+    logger.info(f"Running normal chat with {model}.")
+
     # formatting the prompt using the model's format_prompt function
     prompt = model.format_prompt(message, history, system_prompt, knowledge)
 
@@ -108,6 +113,8 @@ def vanilla_chat(
 def explained_chat(
     model, xai, message: str, history: list, system_prompt: str, knowledge: str = ""
 ):
+    logger.info(f"Running explained chat with {xai} with {model}.")
+
     # formatting the prompt using the model's format_prompt function
     # message, history, system_prompt, knowledge = mdl.prompt_limiter(
     #    message, history, system_prompt, knowledge
