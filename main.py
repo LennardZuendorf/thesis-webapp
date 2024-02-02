@@ -64,9 +64,11 @@ def xai_info(xai_radio):
     else:
         gr.Info("No XAI method was selected.")
 
+
 def model_info(model_radio):
     # displays the selected model using the Gradio Info component
     gr.Info(f"The following model was selected:\n {model_radio} ")
+
 
 # ui interface based on Gradio Blocks
 # see https://www.gradio.app/docs/interface)
