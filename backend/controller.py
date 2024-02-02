@@ -7,7 +7,11 @@ import gradio as gr
 # internal imports
 from model import godel
 from model import mistral
-from explanation import interpret_shap as shap_int, visualize as viz
+from explanation import (
+    interpret_shap as shap_int,
+    interpret_captum as cpt_int,
+    visualize as viz,
+)
 
 
 # main interference function that that calls chat functions depending on selections
@@ -37,7 +41,10 @@ def interference(
         # matching selection
         match xai_selection.lower():
             case "shap":
-                xai = shap_int
+                if model_selection.lower == "mistral":
+                    xai = cpt_int
+                else:
+                    xai = shap_int
             case "attention":
                 xai = viz
             case _:
@@ -102,9 +109,9 @@ def explained_chat(
     model, xai, message: str, history: list, system_prompt: str, knowledge: str = ""
 ):
     # formatting the prompt using the model's format_prompt function
-    #message, history, system_prompt, knowledge = mdl.prompt_limiter(
+    # message, history, system_prompt, knowledge = mdl.prompt_limiter(
     #    message, history, system_prompt, knowledge
-    #)
+    # )
     prompt = model.format_prompt(message, history, system_prompt, knowledge)
 
     # generating an answer using the methods chat function

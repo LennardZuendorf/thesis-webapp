@@ -64,6 +64,9 @@ def xai_info(xai_radio):
     else:
         gr.Info("No XAI method was selected.")
 
+def model_info(model_radio):
+    # displays the selected model using the Gradio Info component
+    gr.Info(f"The following model was selected:\n {model_radio} ")
 
 # ui interface based on Gradio Blocks
 # see https://www.gradio.app/docs/interface)
@@ -135,6 +138,7 @@ with gr.Blocks(
             # calling info functions on inputs/submits for different settings
             system_prompt.submit(system_prompt_info, [system_prompt])
             xai_selection.input(xai_info, [xai_selection])
+            model_selection.input(model_info, [model_selection])
 
         # row with chatbot ui displaying "conversation" with the model
         with gr.Row(equal_height=True):
@@ -164,9 +168,10 @@ with gr.Blocks(
                 )
                 # extenable components for extra knowledge
                 with gr.Accordion(label="Additional Knowledge", open=False):
-                    gr.Markdown(
-                        "*Hint:* Add extra knowledge to see GODEL work the best."
-                    )
+                    gr.Markdown("""
+                        *Hint:* Add extra knowledge to see GODEL work the best.
+                        Knowledge doesn't work mith Mistral and will be ignored.
+                        """)
                     # textbox to enter the knowledge
                     knowledge_input = gr.Textbox(
                         value="",
