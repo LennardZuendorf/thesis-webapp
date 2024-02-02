@@ -21,6 +21,7 @@ exclude = '''
 
 [tool.pylint.messages_control]
 disable = [
+    "not-a-mapping",
     "arguments-differ",
     "attribute-defined-outside-init",
     "blacklisted-name",
