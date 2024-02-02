@@ -7,7 +7,6 @@ import gradio as gr
 # internal imports
 from model import godel
 from model import mistral
-from utils import modelling as mdl
 from explanation import interpret_shap as shap_int, visualize as viz
 
 
@@ -103,9 +102,9 @@ def explained_chat(
     model, xai, message: str, history: list, system_prompt: str, knowledge: str = ""
 ):
     # formatting the prompt using the model's format_prompt function
-    message, history, system_prompt, knowledge = mdl.prompt_limiter(
-        message, history, system_prompt, knowledge
-    )
+    #message, history, system_prompt, knowledge = mdl.prompt_limiter(
+    #    message, history, system_prompt, knowledge
+    #)
     prompt = model.format_prompt(message, history, system_prompt, knowledge)
 
     # generating an answer using the methods chat function

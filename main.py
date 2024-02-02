@@ -175,11 +175,6 @@ with gr.Blocks(
                         info="Add additional context knowledge.",
                         show_label=True,
                     )
-                # textbox to enter the user prompt
-                gr.Markdown(
-                    "*Hint:* More complicated question give better explanation"
-                    " insights!"
-                )
                 user_prompt = gr.Textbox(
                     label="Input Message",
                     max_lines=5,
