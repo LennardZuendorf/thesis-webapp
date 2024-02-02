@@ -16,7 +16,7 @@ def chat_explained(model, prompt):
 
     # generation attribution
     attribution_input = TextTokenInput(prompt, model.TOKENIZER)
-    attribution_result = llm_attribution.attribute(attribution_input)
+    attribution_result = llm_attribution.attribute(attribution_input, gen_args=model.CONFIG.to_dict())
 
     # extracting values and input tokens
     values = attribution_result.seq_attr.to(torch.device("cpu")).numpy()

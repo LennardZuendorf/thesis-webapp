@@ -1,7 +1,7 @@
 # Mistral model module for chat interaction and model instance control
 
 # external imports
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 import torch
 import gradio as gr
 
@@ -26,7 +26,15 @@ else:
 TOKENIZER = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
 
 # default model config
-CONFIG = {"max_new_tokens": 50, "min_length": 8, "top_p": 0.9, "do_sample": True}
+CONFIG = GenerationConfig.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+CONFIG.update(**{
+        "temperature": 0.7,
+        "max_new_tokens": 50,
+        "top_p": 0.9,
+        "repetition_penalty": 1.2,
+        "do_sample": True,
+        "seed": 42
+})
 
 
 # function to (re) set config
@@ -35,14 +43,16 @@ def set_config(config: dict):
 
     # if config dict is given, update it
     if config != {}:
-        CONFIG = config
+        CONFIG.update(**dict)
     else:
-        # hard setting model config to default
-        # needed for shap
-        MODEL.config.max_new_tokens = 50
-        MODEL.config.min_length = 8
-        MODEL.config.top_p = 0.9
-        MODEL.config.do_sample = True
+        CONFIG.update(**{
+                "temperature": 0.7,
+                "max_new_tokens": 50,
+                "top_p": 0.9,
+                "repetition_penalty": 1.2,
+                "do_sample": True,
+                "seed": 42
+        })
 
 
 # advanced formatting function that takes into a account a conversation history
