@@ -7,6 +7,7 @@ import gradio as gr
 
 # internal imports
 from utils import modelling as mdl
+from utils import formatting as fmt
 
 # global model and tokenizer instance (created on inital build)
 device = mdl.get_device()
@@ -91,6 +92,9 @@ def format_answer(answer: str):
     # empty answer string
     formatted_answer = ""
 
+    if type(answer) == list:
+        answer = fmt.format_output_text
+
     # extracting text after INST tokens
     parts = answer.split("[/INST]")
     if len(parts) >= 3:
@@ -106,10 +110,11 @@ def format_answer(answer: str):
 def respond(prompt: str):
 
     # tokenizing inputs and configuring model
-    input_ids = TOKENIZER(f"{prompt}", return_tensors="pt")["input_ids"]
+    input_ids = TOKENIZER(f"{prompt}", return_tensors="pt")["input_ids"].to(device)
 
     # generating text with tokenized input, returning output
-    output_ids = MODEL.generate(input_ids, max_new_tokens=50, generation_config=CONFIG)
+    output_ids = MODEL.generate(input_ids, generation_config=CONFIG)
     output_text = TOKENIZER.batch_decode(output_ids)
+    output_text.fo
 
     return format_answer(output_text)
