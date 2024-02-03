@@ -66,25 +66,25 @@ def format_prompt(message: str, history: list, system_prompt: str, knowledge: st
 
     if knowledge != "":
         gr.Info("""
-    Mistral doesn't support additional knowledge, it's gonna be ignored.
-    """)
+            Mistral doesn't support additional knowledge, it's gonna be ignored.
+            """)
 
     # if no history, use system prompt and example message
     if len(history) == 0:
-        prompt = f"""<s>[INST] {system_prompt} [/INST] How can I help you today? </s>
-      [INST] {message} [/INST]"""
+        prompt = f"""
+            <s>[INST] {system_prompt} [/INST] How can I help you today? </s>
+            [INST] {message} [/INST]
+            """
     else:
         # takes the very first exchange and the system prompt as base
-        for user_prompt, bot_response in history[0]:
-            prompt = (
-                f"<s>[INST] {system_prompt} {user_prompt} [/INST] {bot_response}</s>"
-            )
-
-        # takes all the following conversations and adds them as context
-        prompt += "".join(
-            f"[INST] {user_prompt} [/INST] {bot_response}</s>"
-            for user_prompt, bot_response in history[1:]
+        prompt = (
+            f"<s>[INST] {system_prompt} {history[0][0]} [/INST] {history[0][1]}</s>"
         )
+
+        # adds conversation history to the prompt
+        for conversation in history[1:]:
+            # takes all the following conversations and adds them as context
+            prompt += "".join(f"[INST] {conversation[0]} [/INST] {conversation[1]}</s>")
 
     return prompt
 
