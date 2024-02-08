@@ -110,9 +110,10 @@ with gr.Blocks(
                         label="System Prompt",
                         info="Set the models system prompt, dictating how it answers.",
                         # default system prompt is set to this in the backend
-                        placeholder=(
-                            "You are a helpful, respectful and honest assistant. Always"
-                            " answer as helpfully as possible, while being safe."
+                        placeholder=("""
+                            You are a helpful, respectful and honest assistant. Always
+                            answer as helpfully as possible, while being safe.
+                            """
                         ),
                     )
                 # column that takes up 1/4 of the row
@@ -121,7 +122,7 @@ with gr.Blocks(
                     xai_selection = gr.Radio(
                         ["None", "SHAP", "Attention"],
                         label="Interpretability Settings",
-                        info="Select a Interpretability Implementation to use.",
+                        info="Select a Interpretability Approach Implementation to use.",
                         value="None",
                         interactive=True,
                         show_label=True,
@@ -133,15 +134,15 @@ with gr.Blocks(
                         ["GODEL", "Mistral"],
                         label="Model Settings",
                         info="Select a Model to use.",
-                        value="GODEL",
+                        value="Mistral",
                         interactive=True,
                         show_label=True,
                     )
 
                 # calling info functions on inputs/submits for different settings
-                system_prompt.submit(system_prompt_info, [system_prompt])
-                xai_selection.input(xai_info, [xai_selection])
-                model_selection.input(model_info, [model_selection])
+                system_prompt.change(system_prompt_info, [system_prompt])
+                xai_selection.change(xai_info, [xai_selection])
+                model_selection.change(model_info, [model_selection])
 
         # row with chatbot ui displaying "conversation" with the model
         with gr.Row(equal_height=True):

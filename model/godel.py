@@ -1,7 +1,7 @@
 # GODEL model module for chat interaction and model instance control
 
 # external imports
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, GenerationConfig
 
 # internal imports
 from utils import modelling as mdl
@@ -10,24 +10,20 @@ from utils import modelling as mdl
 TOKENIZER = AutoTokenizer.from_pretrained("microsoft/GODEL-v1_1-large-seq2seq")
 MODEL = AutoModelForSeq2SeqLM.from_pretrained("microsoft/GODEL-v1_1-large-seq2seq")
 
-# default model config
-CONFIG = {"max_new_tokens": 50, "min_length": 8, "top_p": 0.9, "do_sample": True}
+
+# model config definition
+CONFIG = GenerationConfig.from_pretrained("microsoft/GODEL-v1_1-large-seq2seq")
+base_config_dict = {"max_new_tokens": 50, "min_length": 8, "top_p": 0.9, "do_sample": True}
+CONFIG.update(**base_config_dict)
 
 
 # function to (re) set config
-def set_config(config: dict):
-    global CONFIG
+def set_config(config_dict: dict):
 
-    # if config dict is given, update it
-    if config != {}:
-        CONFIG = config
-    else:
-        # hard setting model config to default
-        # needed for shap
-        MODEL.config.max_new_tokens = 50
-        MODEL.config.min_length = 8
-        MODEL.config.top_p = 0.9
-        MODEL.config.do_sample = True
+    # if config dict is not given, set to default
+    if config_dict == {}:
+        config_dict = base_config_dict
+    CONFIG.update(**config_dict)
 
 
 # formatting class to formatting input for the model
@@ -67,7 +63,7 @@ def respond(prompt):
     input_ids = TOKENIZER(f"{prompt}", return_tensors="pt").input_ids
 
     # generating using config and decoding output
-    outputs = MODEL.generate(input_ids, **CONFIG)
+    outputs = MODEL.generate(input_ids,generation_config=CONFIG)
     output = TOKENIZER.decode(outputs[0], skip_special_tokens=True)
 
     # returns the model output string

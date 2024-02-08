@@ -15,7 +15,7 @@ def chat_explained(model, prompt):
     ).input_ids
     # generate output together with attentions of the model
     decoder_input_ids = model.MODEL.generate(
-        encoder_input_ids, output_attentions=True, **model.CONFIG
+        encoder_input_ids, output_attentions=True, generation_config=model.CONFIG
     )
 
     # get input and output text as list of strings
