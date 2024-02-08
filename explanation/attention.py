@@ -18,7 +18,7 @@ def chat_explained(model, prompt):
         prompt, return_tensors="pt", add_special_tokens=True
     ).input_ids
     # generate output together with attentions of the model
-    decoder_input_ids = model.MODEL(
+    decoder_input_ids = model.MODEL.generate(
         encoder_input_ids, output_attentions=True, generation_config=model.CONFIG
     )
 
@@ -36,7 +36,7 @@ def chat_explained(model, prompt):
 
         # get attention values for the input and output vectors
         # using already generated input and output
-        attention_output = model.MODEL(
+        attention_output = model.MODEL.generate(
             input_ids=encoder_input_ids,
             decoder_input_ids=decoder_input_ids,
             output_attentions=True,
