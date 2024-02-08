@@ -23,29 +23,6 @@ def extract_seq_att(shap_values):
     return list(zip(shap_values.data[0], values))
 
 
-# main explain function that returns a chat with explanations
-def chat_explained(model, prompt):
-    model.set_config({})
-
-    # create the shap explainer
-    shap_explainer = PartitionExplainer(model.MODEL, model.TOKENIZER)
-
-    # get the shap values for the prompt
-    shap_values = shap_explainer([prompt])
-
-    # create the explanation graphic and marked text array
-    graphic = create_graphic(shap_values)
-    marked_text = markup_text(
-        shap_values.data[0], shap_values.values[0], variant="shap"
-    )
-
-    # create the response text
-    response_text = fmt.format_output_text(shap_values.output_names)
-
-    # return response, graphic and marked_text array
-    return response_text, graphic, marked_text
-
-
 # function used to wrap the model with a shap model
 def wrap_shap(model):
     # calling global variants
@@ -80,3 +57,26 @@ def create_graphic(shap_values):
 
     # return the html graphic as string to display in iFrame
     return str(graphic_html)
+
+
+# main explain function that returns a chat with explanations
+def chat_explained(model, prompt):
+    model.set_config({})
+
+    # create the shap explainer
+    shap_explainer = PartitionExplainer(model.MODEL, model.TOKENIZER)
+
+    # get the shap values for the prompt
+    shap_values = shap_explainer([prompt])
+
+    # create the explanation graphic and marked text array
+    graphic = create_graphic(shap_values)
+    marked_text = markup_text(
+        shap_values.data[0], shap_values.values[0], variant="shap"
+    )
+
+    # create the response text
+    response_text = fmt.format_output_text(shap_values.output_names)
+
+    # return response, graphic and marked_text array
+    return response_text, graphic, marked_text, None

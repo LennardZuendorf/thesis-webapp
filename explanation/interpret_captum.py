@@ -52,4 +52,4 @@ def chat_explained(model, prompt):
     marked_text = markup_text(input_tokens, values, variant="captum")
 
     # return response, graphic and marked_text array
-    return response_text, graphic, marked_text
+    return response_text, graphic, marked_text, None

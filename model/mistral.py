@@ -58,8 +58,8 @@ def set_config(config_dict: dict):
 
 
 # advanced formatting function that takes into a account a conversation history
-# CREDIT: adapted from Venkata Bhanu Teja Pallakonda in Huggingface discussions
-## see https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1/discussions/
+# CREDIT: adapated from the Mistral AI Instruct chat template
+# see https://github.com/chujiezheng/chat_templates/blob/main/chat_templates/mistral-instruct.jinja 
 def format_prompt(message: str, history: list, system_prompt: str, knowledge: str = ""):
     prompt = ""
 
@@ -83,8 +83,13 @@ def format_prompt(message: str, history: list, system_prompt: str, knowledge: st
         # adds conversation history to the prompt
         for conversation in history[1:]:
             # takes all the following conversations and adds them as context
-            prompt += "".join(f"[INST] {conversation[0]} [/INST] {conversation[1]}</s>")
+            prompt += "".join(
+                f"\n[INST] {conversation[0]} [/INST] {conversation[1]}</s>"
+            )
 
+        prompt += """\n[INST] {message} [/INST]"""
+
+    # returns full prompt
     return prompt
 
 
@@ -93,16 +98,22 @@ def format_answer(answer: str):
     # empty answer string
     formatted_answer = ""
 
-    # extracting text after INST tokens
-    parts = answer.split("[/INST]")
-    if len(parts) >= 3:
-        # Return the text after the second occurrence of [/INST]
-        formatted_answer = parts[2].strip()
-    else:
-        # Return an empty string if there are fewer than two occurrences of [/INST]
-        formatted_answer = ""
+    # splitting answer by instruction tokens
+    segments = answer.split("[/INST]")
 
-    print(f"Cut {answer} into {formatted_answer}.")
+    # checking if proper history got returned
+    if len(segments) > 1:
+        # return text after the last ['/INST'] - reponse to last message
+        formatted_answer = segments[-1].strip()
+    else:
+        # return warning and full answer if not enough [/INST] tokens found
+        gr.Warning("""
+                   There was an issue with answer formatting...\n
+                   returning the full answer.
+                   """)
+        formatted_answer = answer
+
+    print(f"CUT:\n {answer}\nINTO:\n{formatted_answer}")
     return formatted_answer
 
 
