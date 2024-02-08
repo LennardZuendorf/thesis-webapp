@@ -102,45 +102,46 @@ with gr.Blocks(
                 """)
         # row with columns for the different settings
         with gr.Row(equal_height=True):
-            # column that takes up 3/4 of the row
-            with gr.Column(scale=2):
-                # textbox to enter the system prompt
-                system_prompt = gr.Textbox(
-                    label="System Prompt",
-                    info="Set the models system prompt, dictating how it answers.",
-                    # default system prompt is set to this in the backend
-                    placeholder=(
-                        "You are a helpful, respectful and honest assistant. Always"
-                        " answer as helpfully as possible, while being safe."
-                    ),
-                )
-            # column that takes up 1/4 of the row
-            with gr.Column(scale=1):
-                # checkbox group to select the xai method
-                xai_selection = gr.Radio(
-                    ["None", "SHAP", "Attention"],
-                    label="Interpretability Settings",
-                    info="Select a Interpretability Implementation to use.",
-                    value="None",
-                    interactive=True,
-                    show_label=True,
-                )
-            # column that takes up 1/4 of the row
-            with gr.Column(scale=1):
-                # checkbox group to select the xai method
-                model_selection = gr.Radio(
-                    ["GODEL", "Mistral"],
-                    label="Model Settings",
-                    info="Select a Model to use.",
-                    value="GODEL",
-                    interactive=True,
-                    show_label=True,
-                )
+            with gr.Accordion("Application Settings", open=False):
+                # column that takes up 3/4 of the row
+                with gr.Column(scale=2):
+                    # textbox to enter the system prompt
+                    system_prompt = gr.Textbox(
+                        label="System Prompt",
+                        info="Set the models system prompt, dictating how it answers.",
+                        # default system prompt is set to this in the backend
+                        placeholder=(
+                            "You are a helpful, respectful and honest assistant. Always"
+                            " answer as helpfully as possible, while being safe."
+                        ),
+                    )
+                # column that takes up 1/4 of the row
+                with gr.Column(scale=1):
+                    # checkbox group to select the xai method
+                    xai_selection = gr.Radio(
+                        ["None", "SHAP", "Attention"],
+                        label="Interpretability Settings",
+                        info="Select a Interpretability Implementation to use.",
+                        value="None",
+                        interactive=True,
+                        show_label=True,
+                    )
+                # column that takes up 1/4 of the row
+                with gr.Column(scale=1):
+                    # checkbox group to select the xai method
+                    model_selection = gr.Radio(
+                        ["GODEL", "Mistral"],
+                        label="Model Settings",
+                        info="Select a Model to use.",
+                        value="GODEL",
+                        interactive=True,
+                        show_label=True,
+                    )
 
-            # calling info functions on inputs/submits for different settings
-            system_prompt.submit(system_prompt_info, [system_prompt])
-            xai_selection.input(xai_info, [xai_selection])
-            model_selection.input(model_info, [model_selection])
+                # calling info functions on inputs/submits for different settings
+                system_prompt.submit(system_prompt_info, [system_prompt])
+                xai_selection.input(xai_info, [xai_selection])
+                model_selection.input(model_info, [model_selection])
 
         # row with chatbot ui displaying "conversation" with the model
         with gr.Row(equal_height=True):
@@ -251,6 +252,11 @@ with gr.Blocks(
                 show_label=True,
                 height="400px",
             )
+        with gr.Row():
+            with gr.Accordion("Explanation Plot", open=False):
+                xai_plot = gr.Plot(
+                    label="Input Sequence Attribution Plot", show_label=True
+                )
 
     # functions to trigger the controller
     ## takes information for the chat and the xai selection

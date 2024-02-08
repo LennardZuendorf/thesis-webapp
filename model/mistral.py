@@ -25,7 +25,6 @@ else:
     MODEL = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
     MODEL.to(device)
 TOKENIZER = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
-TOKENIZER.pad_token = TOKENIZER.eos_token
 
 # default model config
 CONFIG = GenerationConfig.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
@@ -103,6 +102,7 @@ def format_answer(answer: str):
         # Return an empty string if there are fewer than two occurrences of [/INST]
         formatted_answer = ""
 
+    print(f"Cut {answer} into {formatted_answer}.")
     return formatted_answer
 
 
