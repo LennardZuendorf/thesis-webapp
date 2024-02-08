@@ -66,16 +66,16 @@ def color_codes():
     return {
         # -5 to -1: Strong Light Sky Blue to Lighter Sky Blue
         # 0: white (assuming default light mode)
-        # +1 to +5 light pink to string magenta
-        "-5": "#3251a8",  # Strong Light Sky Blue
-        "-4": "#5A7FB2",  # Slightly Lighter Sky Blue
-        "-3": "#8198BC",  # Intermediate Sky Blue
-        "-2": "#A8B1C6",  # Light Sky Blue
-        "-1": "#E6F0FF",  # Very Light Sky Blue
-        "0": "#FFFFFF",  # White
-        "+1": "#FFE6F0",  # Lighter Pink
-        "+2": "#DF8CA3",  # Slightly Stronger Pink
-        "+3": "#D7708E",  # Intermediate Pink
-        "+4": "#CF5480",  # Deep Pink
-        "+5": "#A83273",  # Strong Magenta
+        # +1 to +5 light pink to strng magenta
+        "-5": "#008bfb",
+        "-4": "#68a1fd",
+        "-3": "#96b7fe",
+        "-2": "#bcceff",
+        "-1:": "#dee6ff",
+        "0": "#ffffff",
+        "1": "#ffd9d9",
+        "2": "#ffb3b5",
+        "3": "#ff8b92",
+        "4": "#ff5c71",
+        "5": "#ff0051",
     }

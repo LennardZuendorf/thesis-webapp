@@ -41,13 +41,11 @@ CONFIG.update(**{
 
 
 # function to (re) set config
-def set_config(config: dict):
+def set_config(config_dict: dict):
 
-    # if config dict is given, update it
-    if config != {}:
-        CONFIG.update(**dict)
-    else:
-        CONFIG.update(**{
+    # if config dict is not given, set to default
+    if config_dict == {}:
+        config_dict = {
             "temperature": 0.7,
             "max_new_tokens": 50,
             "max_length": 50,
@@ -55,7 +53,9 @@ def set_config(config: dict):
             "repetition_penalty": 1.2,
             "do_sample": True,
             "seed": 42,
-        })
+        }
+
+    CONFIG.update(**dict)
 
 
 # advanced formatting function that takes into a account a conversation history
@@ -77,9 +77,9 @@ def format_prompt(message: str, history: list, system_prompt: str, knowledge: st
             """
     else:
         # takes the very first exchange and the system prompt as base
-        prompt = (
-            f"<s>[INST] {system_prompt} {history[0][0]} [/INST] {history[0][1]}</s>"
-        )
+        prompt = f"""
+            <s>[INST] {system_prompt} {history[0][0]} [/INST] {history[0][1]}</s>
+            """
 
         # adds conversation history to the prompt
         for conversation in history[1:]:

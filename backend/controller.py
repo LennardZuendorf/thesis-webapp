@@ -10,7 +10,7 @@ from model import mistral
 from explanation import (
     interpret_shap as shap_int,
     interpret_captum as cpt_int,
-    visualize as viz,
+    visualize_att as viz,
 )
 
 
@@ -33,10 +33,10 @@ def interference(
 
     if model_selection.lower() == "mistral":
         model = mistral
-        print("Indetified model as Mistral")
+        print("Indentified model as Mistral")
     else:
         model = godel
-        print("Indetified model as GODEL")
+        print("Indentified model as GODEL")
 
     # if a XAI approach is selected, grab the XAI module instance
     if xai_selection in ("SHAP", "Attention"):
