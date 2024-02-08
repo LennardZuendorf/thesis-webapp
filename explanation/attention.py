@@ -30,24 +30,7 @@ def chat_explained(model, prompt):
         model.TOKENIZER.convert_ids_to_tokens(decoder_input_ids[0])
     )
 
-    # getting attention if model is godel
-    if isinstance(model, godel):
-        print("attention.py: Model detected to be GODEL")
-
-        # get attention values for the input and output vectors
-        # using already generated input and output
-        attention_output = model.MODEL.generate(
-            input_ids=encoder_input_ids,
-            decoder_input_ids=decoder_input_ids,
-            output_attentions=True,
-        )
-
-        # averaging attention across layers
-        averaged_attention = fmt.avg_attention(attention_output)
-
-    # getting attention is model is mistral
-    else:
-        averaged_attention = fmt.avg_attention(decoder_input_ids)
+    averaged_attention = fmt.avg_attention(decoder_input_ids)
 
     # format response text for clean output
     response_text = fmt.format_output_text(decoder_text)
