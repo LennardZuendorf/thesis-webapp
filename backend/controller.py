@@ -8,9 +8,9 @@ import gradio as gr
 from model import godel
 from model import mistral
 from explanation import (
+    attention as attention_viz,
     interpret_shap as shap_int,
     interpret_captum as cpt_int,
-    visualize_att as viz,
 )
 
 
@@ -48,7 +48,7 @@ def interference(
                 else:
                     xai = shap_int
             case "attention":
-                xai = viz
+                xai = attention_viz
             case _:
                 # use Gradio warning to display error message
                 gr.Warning(f"""

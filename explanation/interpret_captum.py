@@ -46,8 +46,9 @@ def chat_explained(model, prompt):
     # getting response text, graphic placeholder and marked text object
     response_text = fmt.format_output_text(attribution_result.output_tokens)
     graphic = (
-        "<div style='text-align: center; font-family:arial;'><h4>Attention"
-        "Intepretation with Captum doesn't support an interactive graphic.</h4></div>"
+        """<div style='text-align: center; font-family:arial;'><h4>
+        Intepretation with Captum doesn't support an interactive graphic.</h4></div>
+        """
     )
     marked_text = markup_text(input_tokens, values, variant="captum")
 
