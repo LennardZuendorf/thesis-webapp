@@ -110,11 +110,10 @@ with gr.Blocks(
                         label="System Prompt",
                         info="Set the models system prompt, dictating how it answers.",
                         # default system prompt is set to this in the backend
-                        placeholder=("""
+                        placeholder="""
                             You are a helpful, respectful and honest assistant. Always
                             answer as helpfully as possible, while being safe.
-                            """
-                        ),
+                            """,
                     )
                 # column that takes up 1/4 of the row
                 with gr.Column(scale=1):
@@ -122,7 +121,9 @@ with gr.Blocks(
                     xai_selection = gr.Radio(
                         ["None", "SHAP", "Attention"],
                         label="Interpretability Settings",
-                        info="Select a Interpretability Approach Implementation to use.",
+                        info=(
+                            "Select a Interpretability Approach Implementation to use."
+                        ),
                         value="None",
                         interactive=True,
                         show_label=True,
@@ -209,10 +210,15 @@ with gr.Blocks(
                 gr.Examples(
                     label="Example Questions",
                     examples=[
-                        ["Does money buy happiness?", "Mistral", "SHAP"],
-                        ["Does money buy happiness?", "Mistral", "Attention"],
+                        ["Does money buy happiness?", "", "Mistral", "SHAP"],
+                        ["Does money buy happiness?", "", "Mistral", "Attention"],
                     ],
-                    inputs=[user_prompt, model_selection, xai_selection],
+                    inputs=[
+                        user_prompt,
+                        knowledge_input,
+                        model_selection,
+                        xai_selection,
+                    ],
                 )
             with gr.Accordion("GODEL Model Examples", open=False):
                 # examples util component

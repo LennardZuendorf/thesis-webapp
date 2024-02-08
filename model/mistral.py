@@ -110,6 +110,7 @@ def format_answer(answer: str):
 
 
 def respond(prompt: str):
+    set_config({})
 
     # tokenizing inputs and configuring model
     input_ids = TOKENIZER(f"{prompt}", return_tensors="pt")["input_ids"].to(device)

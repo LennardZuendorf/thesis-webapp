@@ -32,7 +32,7 @@ def wrap_shap(model):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # updating the model settings
-    model.set_config()
+    model.set_config({})
 
     # (re)initialize the shap models and masker
     # creating a shap text_generation model

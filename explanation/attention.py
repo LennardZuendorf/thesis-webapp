@@ -3,18 +3,22 @@
 
 # internal imports
 from utils import formatting as fmt
+from model import godel
 from .markup import markup_text
+
 
 # chat function that returns an answer
 # and marked text based on attention
 def chat_explained(model, prompt):
+
+    model.set_config({"return_dict": True})
 
     # get encoded input
     encoder_input_ids = model.TOKENIZER(
         prompt, return_tensors="pt", add_special_tokens=True
     ).input_ids
     # generate output together with attentions of the model
-    decoder_input_ids = model.MODEL.generate(
+    decoder_input_ids = model.MODEL(
         encoder_input_ids, output_attentions=True, generation_config=model.CONFIG
     )
 
@@ -26,16 +30,24 @@ def chat_explained(model, prompt):
         model.TOKENIZER.convert_ids_to_tokens(decoder_input_ids[0])
     )
 
-    # get attention values for the input and output vectors
-    # using already generated input and output
-    attention_output = model.MODEL(
-        input_ids=encoder_input_ids,
-        decoder_input_ids=decoder_input_ids,
-        output_attentions=True,
-    )
+    # getting attention if model is godel
+    if isinstance(model, godel):
+        print("attention.py: Model detected to be GODEL")
 
-    # averaging attention across layers
-    averaged_attention = fmt.avg_attention(attention_output)
+        # get attention values for the input and output vectors
+        # using already generated input and output
+        attention_output = model.MODEL(
+            input_ids=encoder_input_ids,
+            decoder_input_ids=decoder_input_ids,
+            output_attentions=True,
+        )
+
+        # averaging attention across layers
+        averaged_attention = fmt.avg_attention(attention_output)
+
+    # getting attention is model is mistral
+    else:
+        averaged_attention = fmt.avg_attention(decoder_input_ids)
 
     # format response text for clean output
     response_text = fmt.format_output_text(decoder_text)

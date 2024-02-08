@@ -13,7 +13,12 @@ MODEL = AutoModelForSeq2SeqLM.from_pretrained("microsoft/GODEL-v1_1-large-seq2se
 
 # model config definition
 CONFIG = GenerationConfig.from_pretrained("microsoft/GODEL-v1_1-large-seq2seq")
-base_config_dict = {"max_new_tokens": 50, "min_length": 8, "top_p": 0.9, "do_sample": True}
+base_config_dict = {
+    "max_new_tokens": 50,
+    "min_length": 8,
+    "top_p": 0.9,
+    "do_sample": True,
+}
 CONFIG.update(**base_config_dict)
 
 
@@ -59,11 +64,13 @@ def format_prompt(message: str, history: list, system_prompt: str, knowledge: st
 # CREDIT: Copied from official interference example on Huggingface
 ## see https://huggingface.co/microsoft/GODEL-v1_1-large-seq2seq
 def respond(prompt):
+    set_config({})
+
     # tokenizing input string
     input_ids = TOKENIZER(f"{prompt}", return_tensors="pt").input_ids
 
     # generating using config and decoding output
-    outputs = MODEL.generate(input_ids,generation_config=CONFIG)
+    outputs = MODEL.generate(input_ids, generation_config=CONFIG)
     output = TOKENIZER.decode(outputs[0], skip_special_tokens=True)
 
     # returns the model output string
