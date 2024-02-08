@@ -3,7 +3,6 @@
 
 # internal imports
 from utils import formatting as fmt
-from model import godel
 from .markup import markup_text
 
 

@@ -110,7 +110,10 @@ with gr.Blocks(
                         label="System Prompt",
                         info="Set the models system prompt, dictating how it answers.",
                         # default system prompt is set to this in the backend
-                        placeholder=("You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.",
+                        placeholder=(
+                            "You are a helpful, respectful and honest assistant. Always"
+                            " answer as helpfully as possible, while being safe."
+                        ),
                     )
                 # column that takes up 1/4 of the row
                 with gr.Column(scale=1):
