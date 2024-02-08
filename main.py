@@ -272,7 +272,7 @@ with gr.Blocks(
             xai_selection,
             model_selection,
         ],
-        [user_prompt, chatbot, xai_interactive, xai_text],
+        [user_prompt, chatbot, xai_interactive, xai_text, xai_plot],
     )
     # function triggered by the enter key
     user_prompt.submit(
@@ -285,7 +285,7 @@ with gr.Blocks(
             xai_selection,
             model_selection,
         ],
-        [user_prompt, chatbot, xai_interactive, xai_text],
+        [user_prompt, chatbot, xai_interactive, xai_text, xai_plot],
     )
 
     # final row to show legal information

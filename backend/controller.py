@@ -59,15 +59,13 @@ def interference(
                 raise RuntimeError("There was an error in the selected XAI approach.")
 
         # call the explained chat function with the model instance
-        prompt_output, history_output, xai_interactive, xai_markup, xai_plot = (
-            explained_chat(
-                model=model,
-                xai=xai,
-                message=prompt,
-                history=history,
-                system_prompt=system_prompt,
-                knowledge=knowledge,
-            )
+        prompt_output, history_output, xai_interactive, xai_markup, xai_plot = explained_chat(
+            model=model,
+            xai=xai,
+            message=prompt,
+            history=history,
+            system_prompt=system_prompt,
+            knowledge=knowledge,
         )
     # if no XAI approach is selected call the vanilla chat function
     else:
@@ -86,7 +84,7 @@ def interference(
             no graphic will be displayed</h4></div>
             """,
             [("", "")],
-            None,
+            None
         )
 
     # return the outputs
