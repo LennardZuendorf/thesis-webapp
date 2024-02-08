@@ -202,34 +202,54 @@ with gr.Blocks(
                 submit_btn = gr.Button("Submit", variant="primary")
         # row with content examples that get autofilled on click
         with gr.Row(elem_classes="examples"):
-            # examples util component
-            # see: https://www.gradio.app/docs/examples
-            gr.Examples(
-                label="Example Questions",
-                examples=[
-                    [
-                        "How does a black hole form in space?",
-                        (
-                            "Black holes are created when a massive star's core"
-                            " collapses after a supernova, forming an object with"
-                            " gravity so intense that even light cannot escape."
-                        ),
+            with gr.Accordion("Mistral Model Examples", open=False):
+                # examples util component
+                # see: https://www.gradio.app/docs/examples
+                gr.Examples(
+                    label="Example Questions",
+                    examples=[
+                        ["Does money buy happiness?", "Mistral", "SHAP"],
+                        ["Does money buy happiness?", "Mistral", "Attention"],
                     ],
-                    [
-                        (
-                            "Explain the importance of the Rosetta Stone in"
-                            " understanding ancient languages."
-                        ),
-                        (
-                            "The Rosetta Stone, an ancient Egyptian artifact, was key"
-                            " in decoding hieroglyphs, featuring the same text in three"
-                            " scripts: hieroglyphs, Demotic, and Greek."
-                        ),
+                    inputs=[user_prompt, model_selection, xai_selection],
+                )
+            with gr.Accordion("GODEL Model Examples", open=False):
+                # examples util component
+                # see: https://www.gradio.app/docs/examples
+                gr.Examples(
+                    label="Example Questions",
+                    examples=[
+                        [
+                            "How does a black hole form in space?",
+                            (
+                                "Black holes are created when a massive star's core"
+                                " collapses after a supernova, forming an object with"
+                                " gravity so intense that even light cannot escape."
+                            ),
+                            "GODEL",
+                            "SHAP",
+                        ],
+                        [
+                            (
+                                "Explain the importance of the Rosetta Stone in"
+                                " understanding ancient languages."
+                            ),
+                            (
+                                "The Rosetta Stone, an ancient Egyptian artifact, was"
+                                " key in decoding hieroglyphs, featuring the same text"
+                                " in three scripts: hieroglyphs, Demotic, and Greek."
+                            ),
+                            "GODEL",
+                            "Attention",
+                        ],
                     ],
-                    ["Does money buy happiness?", ""],
-                ],
-                inputs=[user_prompt, knowledge_input],
-            )
+                    inputs=[
+                        user_prompt,
+                        knowledge_input,
+                        model_selection,
+                        xai_selection,
+                    ],
+                )
 
     # explanations tab used to provide explanations for a specific conversation
     with gr.Tab("Explanations"):

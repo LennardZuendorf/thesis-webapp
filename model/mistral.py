@@ -28,15 +28,16 @@ TOKENIZER = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
 
 # default model config
 CONFIG = GenerationConfig.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
-CONFIG.update(**{
+base_config_dict = {
     "temperature": 0.7,
-    "max_new_tokens": 50,
-    "max_length": 50,
+    "max_new_tokens": 64,
+    "max_length": 64,
     "top_p": 0.9,
     "repetition_penalty": 1.2,
     "do_sample": True,
     "seed": 42,
-})
+}
+CONFIG.update(**base_config_dict)
 
 
 # function to (re) set config
@@ -44,22 +45,13 @@ def set_config(config_dict: dict):
 
     # if config dict is not given, set to default
     if config_dict == {}:
-        config_dict = {
-            "temperature": 0.7,
-            "max_new_tokens": 50,
-            "max_length": 50,
-            "top_p": 0.9,
-            "repetition_penalty": 1.2,
-            "do_sample": True,
-            "seed": 42,
-        }
-
-    CONFIG.update(**dict)
+        config_dict = base_config_dict
+    CONFIG.update(**config_dict)
 
 
 # advanced formatting function that takes into a account a conversation history
 # CREDIT: adapated from the Mistral AI Instruct chat template
-# see https://github.com/chujiezheng/chat_templates/blob/main/chat_templates/mistral-instruct.jinja 
+# see https://github.com/chujiezheng/chat_templates/
 def format_prompt(message: str, history: list, system_prompt: str, knowledge: str = ""):
     prompt = ""
 
