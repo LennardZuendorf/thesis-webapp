@@ -6,6 +6,7 @@ import torch
 
 # internal imports
 from utils import formatting as fmt
+from .plotting import plot_seq
 from .markup import markup_text
 
 # global variables
@@ -14,7 +15,7 @@ TEXT_MASKER = None
 
 
 # function to extract summarized sequence wise attribution
-def extract_seq_att(shap_values):
+def shap_extract_seq_att(shap_values):
 
     # extracting summed up shap values
     values = fmt.flatten_attribution(shap_values.values[0], 1)
@@ -78,5 +79,8 @@ def chat_explained(model, prompt):
     # create the response text
     response_text = fmt.format_output_text(shap_values.output_names)
 
+    # creating sequence attribution plot
+    plot = plot_seq(shap_extract_seq_att(shap_values), "PartitionSHAP")
+
     # return response, graphic and marked_text array
-    return response_text, graphic, marked_text, None
+    return response_text, graphic, marked_text, plot

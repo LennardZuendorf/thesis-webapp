@@ -97,3 +97,14 @@ def gpu_loading_config(max_memory: str = "15000MB"):
     )
 
     return n_gpus, max_memory, bnb_config
+
+
+# formatting mistral attention values
+# CREDIT: copied and adapted from BERTViz
+# see https://github.com/jessevig/bertviz
+def format_mistral_attention(attention_values):
+    squeezed = []
+    for layer_attention in attention_values:
+        layer_attention = layer_attention.squeeze(0)
+        squeezed.append(layer_attention)
+    return torch.stack(squeezed)

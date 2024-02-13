@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def plot_seq(seq_values: list, method_model: tuple = ("", "")):
+def plot_seq(seq_values: list, method: str = ""):
 
     # Separate the tokens and their corresponding importance values
     tokens, importance = zip(*seq_values)
@@ -45,7 +45,7 @@ def plot_seq(seq_values: list, method_model: tuple = ("", "")):
         )
 
     plt.axhline(0, color="black", linewidth=1)
-    plt.title(f"Input Token Attribution with {method_model[0]} on {method_model[1]}")
+    plt.title(f"Input Token Attribution with {method}")
     plt.xlabel("Input Tokens", labelpad=0.5)
     plt.ylabel("Attribution")
     plt.xticks(x_positions, tokens, rotation=45)

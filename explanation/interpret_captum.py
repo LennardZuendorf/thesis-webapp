@@ -4,6 +4,7 @@ import torch
 
 # internal imports
 from utils import formatting as fmt
+from .plotting import plot_seq
 from .markup import markup_text
 
 
@@ -26,7 +27,7 @@ def cpt_extract_seq_att(attr):
 def chat_explained(model, prompt):
     model.set_config({})
 
-    # creating llm attribution class with KernelSHAP and Mistal Model, Tokenizer
+    # creating llm attribution class with KernelSHAP and Mistral Model, Tokenizer
     llm_attribution = LLMAttribution(KernelShap(model.MODEL), model.TOKENIZER)
 
     # generation attribution
@@ -48,7 +49,11 @@ def chat_explained(model, prompt):
     graphic = """<div style='text-align: center; font-family:arial;'><h4>
         Intepretation with Captum doesn't support an interactive graphic.</h4></div>
         """
+    # create the explanation marked text array
     marked_text = markup_text(input_tokens, values, variant="captum")
 
+    # creating sequence attribution plot
+    plot = plot_seq(cpt_extract_seq_att(attribution_result), "KernelSHAP")
+
     # return response, graphic and marked_text array
-    return response_text, graphic, marked_text, None
+    return response_text, graphic, marked_text, plot

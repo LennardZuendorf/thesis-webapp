@@ -155,7 +155,7 @@ with gr.Blocks(
                     The explanations are based on 10 buckets that range between the
                     lowest negative value (1 to 5) and the highest positive attribution value (6 to 10).
                     **The legend shows the color for each bucket.**
-                                
+
                     *HINT*: This works best in light mode.
                     """)
                     xai_text = gr.HighlightedText(
@@ -210,12 +210,34 @@ with gr.Blocks(
                 gr.Examples(
                     label="Example Questions",
                     examples=[
-                        ["Does money buy happiness?", "", "Mistral", "SHAP"],
-                        ["Does money buy happiness?", "", "Mistral", "Attention"],
+                        ["Does money buy happiness?", "", "", "Mistral", "None"],
+                        ["Does money buy happiness?", "", "", "Mistral", "SHAP"],
+                        ["Does money buy happiness?", "", "", "Mistral", "Attention"],
+                        [
+                            "Does money buy happiness?",
+                            "",
+                            (
+                                "Respond from the perspective of a billionaire enjoying"
+                                " life in Dubai"
+                            ),
+                            "Mistral",
+                            "None",
+                        ],
+                        [
+                            "Does money buy happiness?",
+                            "",
+                            (
+                                "Respond from the perspective of a billionaire enjoying"
+                                " life in Dubai"
+                            ),
+                            "Mistral",
+                            "SHAP",
+                        ],
                     ],
                     inputs=[
                         user_prompt,
                         knowledge_input,
+                        system_prompt,
                         model_selection,
                         xai_selection,
                     ],
@@ -227,32 +249,21 @@ with gr.Blocks(
                     label="Example Questions",
                     examples=[
                         [
-                            "How does a black hole form in space?",
+                            "Does money buy happiness?",
                             (
                                 "Black holes are created when a massive star's core"
                                 " collapses after a supernova, forming an object with"
                                 " gravity so intense that even light cannot escape."
                             ),
+                            "",
                             "GODEL",
                             "SHAP",
-                        ],
-                        [
-                            (
-                                "Explain the importance of the Rosetta Stone in"
-                                " understanding ancient languages."
-                            ),
-                            (
-                                "The Rosetta Stone, an ancient Egyptian artifact, was"
-                                " key in decoding hieroglyphs, featuring the same text"
-                                " in three scripts: hieroglyphs, Demotic, and Greek."
-                            ),
-                            "GODEL",
-                            "Attention",
                         ],
                     ],
                     inputs=[
                         user_prompt,
                         knowledge_input,
+                        system_prompt,
                         model_selection,
                         xai_selection,
                     ],
