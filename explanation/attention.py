@@ -28,14 +28,14 @@ def chat_explained(model, prompt):
     # checking if model is mistral
     if type(model.MODEL) == type(mistral.MODEL):
 
-        # get attention values for the input vectors
+        # get attention values for the input vectors, specific to mistral
         attention_output = model.MODEL(input_ids, output_attentions=True).attentions
 
         # averaging attention across layers and heads
         attention_output = mdl.format_mistral_attention(attention_output)
         averaged_attention = fmt.avg_attention(attention_output, model="mistral")
 
-    # attention visualization for godel
+    # otherwise use attention visualization for godel
     else:
         # get attention values for the input and output vectors
         # using already generated input and output

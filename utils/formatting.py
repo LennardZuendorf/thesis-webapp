@@ -88,11 +88,19 @@ def flatten_attention(values: ndarray, axis: int = 0):
 
 # function to get averaged decoder attention from attention values
 def avg_attention(attention_values, model: str):
+
     # check if model is godel
     if model == "godel":
         # get attention values for the input and output vectors
         attention = attention_values.decoder_attentions[0][0].detach().numpy()
         return np.mean(attention, axis=0)
+
     # extracting attention values for mistral
-    attention_np = attention_values.to(torch.device("cpu")).detach().numpy()
-    return np.mean(attention_np, axis=(0, 1, 2))
+    attention = attention_values.to(torch.device("cpu")).detach().numpy()
+
+    # removing the last dimension and transposing to get the correct shape
+    attention = attention[:, :, :, 0]
+    attention = attention.transpose
+
+    # return the averaged attention values
+    return np.mean(attention, axis=1)

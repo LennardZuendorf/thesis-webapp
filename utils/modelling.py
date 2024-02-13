@@ -107,4 +107,4 @@ def format_mistral_attention(attention_values):
     for layer_attention in attention_values:
         layer_attention = layer_attention.squeeze(0)
         squeezed.append(layer_attention)
-    return torch.stack(squeezed)
+    return torch.stack(squeezed).to(torch.device("cpu"))

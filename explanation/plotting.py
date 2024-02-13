@@ -12,7 +12,6 @@ def plot_seq(seq_values: list, method: str = ""):
 
     # Convert importance values to numpy array for conditional coloring
     importance = np.array(importance)
-    importance = importance.log
 
     # Determine the colors based on the sign of the importance values
     colors = ["#ff0051" if val > 0 else "#008bfb" for val in importance]
@@ -22,9 +21,8 @@ def plot_seq(seq_values: list, method: str = ""):
     x_positions = range(len(tokens))  # Positions for the bars
 
     # Creating vertical bar plot
-    bar_width = 0.8  # Increase this value to make the bars wider
+    bar_width = 0.8
     plt.bar(x_positions, importance, color=colors, align="center", width=bar_width)
-    plt.yscale("symlog")
 
     # Annotating each bar with its value
     padding = 0.1  # Padding for text annotation
