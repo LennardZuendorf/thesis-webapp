@@ -45,7 +45,7 @@ def prompt_limiter(
 
     # if token count small enough, adding history bit by bit
     if pre_count < 800:
-        # setting the count to the precount
+        # setting the count to the pre-count
         count = pre_count
         # reversing the history to prioritize recent conversations
         history.reverse()
@@ -76,6 +76,7 @@ def token_counter(tokenizer, text: str):
     return len(tokens[0])
 
 
+# function to determine the device to use
 def get_device():
     if torch.cuda.is_available():
         device = torch.device("cuda")
@@ -85,7 +86,9 @@ def get_device():
     return device
 
 
-# setting device based on available hardware
+# function to set device config
+# CREDIT: Adapted from captum llama 2 example
+# see https://captum.ai/tutorials/Llama2_LLM_Attribution
 def gpu_loading_config(max_memory: str = "15000MB"):
     n_gpus = torch.cuda.device_count()
 

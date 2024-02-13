@@ -21,7 +21,7 @@ This is the UI showcase for my thesis about the interpretability of LLM based ch
 
 ### 🔗 Links:
 
-**[Github Repository](https://github.com/LennardZuendorf/thesis-webapp)**
+**[GitHub Repository](https://github.com/LennardZuendorf/thesis-webapp)**
 
 **[Huggingface Spaces Showcase](https://huggingface.co/spaces/lennardzuendorf/thesis-webapp-docker)**
 
@@ -86,7 +86,7 @@ See code for in detailed credits, work is strongly based on:
 
 #### SHAP
 - [Github](https://github.com/shap/shap)
-- [Inital Paper](https://arxiv.org/abs/1705.07874)
+- [Initial Paper](https://arxiv.org/abs/1705.07874)
 
 #### Custom Component (/components/iframe/)
 

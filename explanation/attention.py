@@ -11,6 +11,8 @@ from .markup import markup_text
 # and marked text based on attention
 def chat_explained(model, prompt):
 
+    print(f"Running explained chat with prompt {prompt}.")
+
     # get encoded input
     input_ids = model.TOKENIZER(
         prompt, return_tensors="pt", add_special_tokens=True
@@ -56,6 +58,7 @@ def chat_explained(model, prompt):
         " Visualization doesn't support an interactive graphic.</h4></div>"
     )
     # creating marked text using markup_text function and attention
+    print(f"Creating marked text with {input_text}.")
     marked_text = markup_text(input_text, averaged_attention, variant="visualizer")
 
     # returning response, graphic and marked text array

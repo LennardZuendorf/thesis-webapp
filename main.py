@@ -26,7 +26,7 @@ css = """
     .examples {text-align: start;}
     .seperatedRow {border-top: 1rem solid;}",
     """
-# custom js to force lightmode in custom environments
+# custom js to force light mode in custom environments
 if os.environ["HOSTING"].lower() != "spaces":
     js = """
     function () {
@@ -52,6 +52,12 @@ def load_md(path):
 
 # function to display the system prompt info
 def system_prompt_info(sys_prompt_txt):
+    if sys_prompt_txt == "":
+        sys_prompt_txt = """
+            You are a helpful, respectful and honest assistant.
+            Always answer as helpfully as possible, while being safe.
+        """
+
     # display the system prompt using the Gradio Info component
     gr.Info(f"The system prompt was set to:\n {sys_prompt_txt}")
 
@@ -71,7 +77,7 @@ def model_info(model_radio):
 
 
 # ui interface based on Gradio Blocks
-# see https://www.gradio.app/docs/interface)
+# see https://www.gradio.app/docs/interface
 with gr.Blocks(
     css=css,
     js=js,
@@ -171,11 +177,11 @@ with gr.Blocks(
                     show_copy_button=True,
                     avatar_images=("./public/human.jpg", "./public/bot.jpg"),
                 )
-                # extenable components for extra knowledge
+                # extendable components for extra knowledge
                 with gr.Accordion(label="Additional Knowledge", open=False):
                     gr.Markdown("""
                         *Hint:* Add extra knowledge to see GODEL work the best.
-                        Knowledge doesn't work mith Mistral and will be ignored.
+                        Knowledge doesn't work with Mistral and will be ignored.
                         """)
                     # textbox to enter the knowledge
                     knowledge_input = gr.Textbox(
@@ -217,8 +223,8 @@ with gr.Blocks(
                             "Does money buy happiness?",
                             "",
                             (
-                                "Respond from the perspective of a billionaire enjoying"
-                                " life in Dubai"
+                                "Respond from the perspective of billionaire heir"
+                                " living his best life with his father's money."
                             ),
                             "Mistral",
                             "None",
@@ -227,8 +233,8 @@ with gr.Blocks(
                             "Does money buy happiness?",
                             "",
                             (
-                                "Respond from the perspective of a billionaire enjoying"
-                                " life in Dubai"
+                                "Respond from the perspective of billionaire heir"
+                                " living his best life with his father's money."
                             ),
                             "Mistral",
                             "SHAP",
@@ -251,13 +257,35 @@ with gr.Blocks(
                         [
                             "Does money buy happiness?",
                             (
-                                "Black holes are created when a massive star's core"
-                                " collapses after a supernova, forming an object with"
-                                " gravity so intense that even light cannot escape."
+                                "Some studies have found a correlation between income"
+                                " and happiness, but this relationship often has"
+                                " diminishing returns. From a psychological standpoint,"
+                                " it's not just having money, but how it is used that"
+                                " influences happiness."
                             ),
                             "",
                             "GODEL",
                             "SHAP",
+                        ],
+                        [
+                            "Does money buy happiness?",
+                            (
+                                "Some studies have found a correlation between income"
+                                " and happiness, but this relationship often has"
+                                " diminishing returns. From a psychological standpoint,"
+                                " it's not just having money, but how it is used that"
+                                " influences happiness."
+                            ),
+                            "",
+                            "GODEL",
+                            "Attention",
+                        ],
+                        [
+                            "Does money buy happiness?",
+                            "",
+                            "",
+                            "GODEL",
+                            "Attention",
                         ],
                     ],
                     inputs=[
@@ -332,7 +360,7 @@ with gr.Blocks(
         # load about.md markdown
         gr.Markdown(value=load_md("public/about.md"))
         with gr.Accordion(label="Credits, Data Protection, License"):
-            # load credits and dataprotection markdown
+            # load credits and data protection markdown
             gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
 
 # mount function for fastAPI Application

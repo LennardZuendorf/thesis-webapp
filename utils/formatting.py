@@ -100,7 +100,7 @@ def avg_attention(attention_values, model: str):
 
     # removing the last dimension and transposing to get the correct shape
     attention = attention[:, :, :, 0]
-    attention = attention.transpose
+    attention = attention.transpose()
 
     # return the averaged attention values
     return np.mean(attention, axis=1)

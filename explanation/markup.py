@@ -21,7 +21,7 @@ def markup_text(input_text: list, text_values: ndarray, variant: str):
     elif variant == "visualizer":
         text_values = fmt.flatten_attention(text_values)
 
-    # Determine the minimum and maximum values
+    # determine the minimum and maximum values
     min_val, max_val = np.min(text_values), np.max(text_values)
 
     # separate the threshold calculation for negative and positive values
@@ -69,7 +69,7 @@ def color_codes():
     return {
         # -5 to -1: Strong Light Sky Blue to Lighter Sky Blue
         # 0: white (assuming default light mode)
-        # +1 to +5 light pink to strng magenta
+        # +1 to +5 light pink to strong magenta
         "-5": "#008bfb",
         "-4": "#68a1fd",
         "-3": "#96b7fe",

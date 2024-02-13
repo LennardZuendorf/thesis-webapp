@@ -43,6 +43,7 @@ def explained_chat(
     #    message, history, system_prompt, knowledge
     # )
     prompt = model.format_prompt(message, history, system_prompt, knowledge)
+    print(f"Formatted prompt: {prompt}")
 
     # generating an answer using the methods chat function
     answer, xai_graphic, xai_markup, xai_plot = xai.chat_explained(model, prompt)
@@ -73,10 +74,10 @@ def interference(
     # if a model is selected, grab the model instance
     if model_selection.lower() == "mistral":
         model = mistral
-        print("Indentified model as Mistral")
+        print("Identified model as Mistral")
     else:
         model = godel
-        print("Indentified model as GODEL")
+        print("Identified model as GODEL")
 
     # if a XAI approach is selected, grab the XAI module instance
     # and call the explained chat function

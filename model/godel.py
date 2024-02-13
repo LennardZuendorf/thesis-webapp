@@ -6,7 +6,7 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, GenerationConfig
 # internal imports
 from utils import modelling as mdl
 
-# global model and tokenizer instance (created on inital build)
+# global model and tokenizer instance (created on initial build)
 TOKENIZER = AutoTokenizer.from_pretrained("microsoft/GODEL-v1_1-large-seq2seq")
 MODEL = AutoModelForSeq2SeqLM.from_pretrained("microsoft/GODEL-v1_1-large-seq2seq")
 

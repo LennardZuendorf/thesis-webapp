@@ -9,7 +9,8 @@ import gradio as gr
 from utils import modelling as mdl
 from utils import formatting as fmt
 
-# global model and tokenizer instance (created on inital build)
+# global model and tokenizer instance (created on initial build)
+# determine if GPU is available and load model accordingly
 device = mdl.get_device()
 if device == torch.device("cuda"):
     n_gpus, max_memory, bnb_config = mdl.gpu_loading_config()
@@ -17,13 +18,15 @@ if device == torch.device("cuda"):
     MODEL = AutoModelForCausalLM.from_pretrained(
         "mistralai/Mistral-7B-Instruct-v0.2",
         quantization_config=bnb_config,
-        device_map="auto",  # dispatch efficiently the model on the available ressources
+        device_map="auto",
         max_memory={i: max_memory for i in range(n_gpus)},
     )
 
+# otherwise, load model on CPU
 else:
     MODEL = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
     MODEL.to(device)
+# load tokenizer
 TOKENIZER = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
 
 # default model config
@@ -48,12 +51,13 @@ def set_config(config_dict: dict):
     CONFIG.update(**config_dict)
 
 
-# advanced formatting function that takes into a account a conversation history
-# CREDIT: adapated from the Mistral AI Instruct chat template
+# advanced formatting function that takes into account a conversation history
+# CREDIT: adapted from the Mistral AI Instruct chat template
 # see https://github.com/chujiezheng/chat_templates/
 def format_prompt(message: str, history: list, system_prompt: str, knowledge: str = ""):
     prompt = ""
 
+    # send information to the ui if knowledge is not empty
     if knowledge != "":
         gr.Info("""
             Mistral doesn't support additional knowledge, it's gonna be ignored.
@@ -94,7 +98,7 @@ def format_answer(answer: str):
 
     # checking if proper history got returned
     if len(segments) > 1:
-        # return text after the last ['/INST'] - reponse to last message
+        # return text after the last ['/INST'] - response to last message
         formatted_answer = segments[-1].strip()
     else:
         # return warning and full answer if not enough [/INST] tokens found
@@ -108,7 +112,11 @@ def format_answer(answer: str):
     return formatted_answer
 
 
+# response class calling the model and returning the model output message
+# CREDIT: Copied from official interference example on Huggingface
+# see https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2
 def respond(prompt: str):
+    # setting config to default
     set_config({})
 
     # tokenizing inputs and configuring model
@@ -117,6 +125,9 @@ def respond(prompt: str):
     # generating text with tokenized input, returning output
     output_ids = MODEL.generate(input_ids, generation_config=CONFIG)
     output_text = TOKENIZER.batch_decode(output_ids)
+
+    # formatting output text with special function
     output_text = fmt.format_output_text(output_text)
 
+    # returning the model output string
     return format_answer(output_text)

@@ -7,24 +7,24 @@ import matplotlib.pyplot as plt
 
 def plot_seq(seq_values: list, method: str = ""):
 
-    # Separate the tokens and their corresponding importance values
+    # separate the tokens and their corresponding importance values
     tokens, importance = zip(*seq_values)
 
-    # Convert importance values to numpy array for conditional coloring
+    # convert importance values to numpy array for conditional coloring
     importance = np.array(importance)
 
-    # Determine the colors based on the sign of the importance values
+    # determine the colors based on the sign of the importance values
     colors = ["#ff0051" if val > 0 else "#008bfb" for val in importance]
 
-    # Create a bar plot
+    # create a bar plot
     plt.figure(figsize=(len(tokens) * 0.9, np.max(importance)))
     x_positions = range(len(tokens))  # Positions for the bars
 
-    # Creating vertical bar plot
+    # creating vertical bar plot
     bar_width = 0.8
     plt.bar(x_positions, importance, color=colors, align="center", width=bar_width)
 
-    # Annotating each bar with its value
+    # annotating each bar with its value
     padding = 0.1  # Padding for text annotation
     for x, (y, color) in enumerate(zip(importance, colors)):
         sign = "+" if y > 0 else ""
