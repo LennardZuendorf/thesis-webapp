@@ -14,7 +14,7 @@ MODEL = AutoModelForSeq2SeqLM.from_pretrained("microsoft/GODEL-v1_1-large-seq2se
 # model config definition
 CONFIG = GenerationConfig.from_pretrained("microsoft/GODEL-v1_1-large-seq2seq")
 base_config_dict = {
-    "max_new_tokens": 50,
+    "max_new_tokens": 64,
     "min_length": 8,
     "top_p": 0.9,
     "do_sample": True,

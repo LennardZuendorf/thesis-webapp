@@ -82,23 +82,20 @@ def get_device():
         device = torch.device("cuda")
     else:
         device = torch.device("cpu")
-
     return device
 
 
 # function to set device config
-# CREDIT: Adapted from captum llama 2 example
+# CREDIT: Copied from captum llama 2 example
 # see https://captum.ai/tutorials/Llama2_LLM_Attribution
 def gpu_loading_config(max_memory: str = "15000MB"):
     n_gpus = torch.cuda.device_count()
-
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_use_double_quant=True,
         bnb_4bit_quant_type="nf4",
         bnb_4bit_compute_dtype=torch.bfloat16,
     )
-
     return n_gpus, max_memory, bnb_config
 
 

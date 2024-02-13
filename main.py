@@ -216,36 +216,46 @@ with gr.Blocks(
                 gr.Examples(
                     label="Example Questions",
                     examples=[
-                        ["Does money buy happiness?", "", "", "Mistral", "None"],
-                        ["Does money buy happiness?", "", "", "Mistral", "SHAP"],
-                        ["Does money buy happiness?", "", "", "Mistral", "Attention"],
+                        ["Does money buy happiness?", "None", "", "Mistral", ""],
+                        ["Does money buy happiness?", "SHAP", "", "Mistral", ""],
+                        ["Does money buy happiness?", "Attention", "", "Mistral", ""],
                         [
                             "Does money buy happiness?",
-                            "",
+                            "None",
                             (
                                 "Respond from the perspective of billionaire heir"
                                 " living his best life with his father's money."
                             ),
                             "Mistral",
-                            "None",
+                            "",
                         ],
                         [
                             "Does money buy happiness?",
-                            "",
+                            "SHAP",
                             (
                                 "Respond from the perspective of billionaire heir"
                                 " living his best life with his father's money."
                             ),
                             "Mistral",
-                            "SHAP",
+                            "",
+                        ],
+                        [
+                            "Does money buy happiness?",
+                            "Attention",
+                            (
+                                "Respond from the perspective of billionaire heir"
+                                " living his best life with his father's money."
+                            ),
+                            "Mistral",
+                            "",
                         ],
                     ],
                     inputs=[
                         user_prompt,
-                        knowledge_input,
                         system_prompt,
-                        model_selection,
                         xai_selection,
+                        model_selection,
+                        knowledge_input,
                     ],
                 )
             with gr.Accordion("GODEL Model Examples", open=False):

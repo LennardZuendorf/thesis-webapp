@@ -37,6 +37,9 @@ def chat_explained(model, prompt):
         attention_output = mdl.format_mistral_attention(attention_output)
         averaged_attention = fmt.avg_attention(attention_output, model="mistral")
 
+        response_text = fmt.format_output_text(output_text)
+        response_text = mistral.format_answer(response_text)
+
     # otherwise use attention visualization for godel
     else:
         # get attention values for the input and output vectors
@@ -49,9 +52,8 @@ def chat_explained(model, prompt):
 
         # averaging attention across layers
         averaged_attention = fmt.avg_attention(attention_output, model="godel")
+        response_text = fmt.format_output_text(output_text)
 
-    # format response text for clean output
-    response_text = fmt.format_output_text(output_text)
     # setting placeholder for iFrame graphic
     graphic = (
         "<div style='text-align: center; font-family:arial;'><h4>Attention"

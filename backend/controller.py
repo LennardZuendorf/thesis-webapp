@@ -43,7 +43,6 @@ def explained_chat(
     #    message, history, system_prompt, knowledge
     # )
     prompt = model.format_prompt(message, history, system_prompt, knowledge)
-    print(f"Formatted prompt: {prompt}")
 
     # generating an answer using the methods chat function
     answer, xai_graphic, xai_markup, xai_plot = xai.chat_explained(model, prompt)
@@ -66,10 +65,10 @@ def interference(
 ):
     # if no proper system prompt is given, use a default one
     if system_prompt in ("", " "):
-        system_prompt = """
-            You are a helpful, respectful and honest assistant.
-            Always answer as helpfully as possible, while being safe.
-        """
+        system_prompt = (
+            "You are a helpful, respectful and honest assistant."
+            "Always answer as helpfully as possible, while being safe."
+        )
 
     # if a model is selected, grab the model instance
     if model_selection.lower() == "mistral":

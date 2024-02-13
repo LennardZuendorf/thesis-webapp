@@ -10,6 +10,8 @@ from utils import formatting as fmt
 
 # main function that assigns each text snipped a marked bucket
 def markup_text(input_text: list, text_values: ndarray, variant: str):
+    print(f"Marking up text {input_text} and {text_values} for {variant}.")
+
     # naming of the 11 buckets
     bucket_tags = ["-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5"]
 
@@ -20,6 +22,12 @@ def markup_text(input_text: list, text_values: ndarray, variant: str):
         text_values = fmt.flatten_attribution(text_values)
     elif variant == "visualizer":
         text_values = fmt.flatten_attention(text_values)
+
+    if text_values.size != len(input_text):
+        raise ValueError(
+            "Length of input text and attribution values do not match. "
+            f"Text: {len(input_text)}, Attributions: {len(text_values)}"
+        )
 
     # determine the minimum and maximum values
     min_val, max_val = np.min(text_values), np.max(text_values)
@@ -47,17 +55,17 @@ def markup_text(input_text: list, text_values: ndarray, variant: str):
     for text, value in zip(input_text, text_values):
 
         # validating text and skipping empty text/special tokens
-        if text not in ("", fmt.SPECIAL_TOKENS):
-            # setting initial bucket at lowest
-            bucket = "-5"
+        # if text not in fmt.SPECIAL_TOKENS:
+        # setting initial bucket at lowest
+        bucket = "-5"
 
-            # looping over all bucket and their threshold
-            for i, threshold in zip(bucket_tags, thresholds):
-                # updating assigned bucket if value is above threshold
-                if value >= threshold:
-                    bucket = i
-            # finally adding text and bucket assignment to list of tuples
-            marked_text.append((text, str(bucket)))
+        # looping over all bucket and their threshold
+        for i, threshold in zip(bucket_tags, thresholds):
+            # updating assigned bucket if value is above threshold
+            if value >= threshold:
+                bucket = i
+        # finally adding text and bucket assignment to list of tuples
+        marked_text.append((text, str(bucket)))
 
     # returning list of marked text snippets as list of tuples
     return marked_text
