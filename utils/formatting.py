@@ -92,15 +92,14 @@ def avg_attention(attention_values, model: str):
     # check if model is godel
     if model == "godel":
         # get attention values for the input and output vectors
-        attention = attention_values.decoder_attentions[0][0].detach().numpy()
-        return np.mean(attention, axis=0)
+        attention = attention_values.encoder_attentions[0][0].detach().numpy()
+        return np.mean(attention, axis=1)
 
     # extracting attention values for mistral
     attention = attention_values.to(torch.device("cpu")).detach().numpy()
 
     # removing the last dimension and transposing to get the correct shape
     attention = attention[:, :, :, 0]
-    attention = attention.transpose()
 
     # return the averaged attention values
     return np.mean(attention, axis=1)

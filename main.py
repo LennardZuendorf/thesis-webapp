@@ -252,8 +252,8 @@ with gr.Blocks(
                     ],
                     inputs=[
                         user_prompt,
-                        system_prompt,
                         xai_selection,
+                        system_prompt,
                         model_selection,
                         knowledge_input,
                     ],
@@ -266,19 +266,7 @@ with gr.Blocks(
                     examples=[
                         [
                             "Does money buy happiness?",
-                            (
-                                "Some studies have found a correlation between income"
-                                " and happiness, but this relationship often has"
-                                " diminishing returns. From a psychological standpoint,"
-                                " it's not just having money, but how it is used that"
-                                " influences happiness."
-                            ),
-                            "",
-                            "GODEL",
                             "SHAP",
-                        ],
-                        [
-                            "Does money buy happiness?",
                             (
                                 "Some studies have found a correlation between income"
                                 " and happiness, but this relationship often has"
@@ -288,14 +276,26 @@ with gr.Blocks(
                             ),
                             "",
                             "GODEL",
-                            "Attention",
                         ],
                         [
                             "Does money buy happiness?",
+                            "Attention",
+                            (
+                                "Some studies have found a correlation between income"
+                                " and happiness, but this relationship often has"
+                                " diminishing returns. From a psychological standpoint,"
+                                " it's not just having money, but how it is used that"
+                                " influences happiness."
+                            ),
+                            "",
+                            "GODEL",
+                        ],
+                        [
+                            "Does money buy happiness?",
+                            "Attention",
                             "",
                             "",
                             "GODEL",
-                            "Attention",
                         ],
                     ],
                     inputs=[

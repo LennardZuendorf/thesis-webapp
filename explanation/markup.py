@@ -10,7 +10,7 @@ from utils import formatting as fmt
 
 # main function that assigns each text snipped a marked bucket
 def markup_text(input_text: list, text_values: ndarray, variant: str):
-    print(f"Marking up text {input_text} and {text_values} for {variant}.")
+    print(f"Marking up text {input_text} for {variant}.")
 
     # naming of the 11 buckets
     bucket_tags = ["-5", "-4", "-3", "-2", "-1", "0", "+1", "+2", "+3", "+4", "+5"]

@@ -32,12 +32,11 @@ TOKENIZER = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
 # default model config
 CONFIG = GenerationConfig.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
 base_config_dict = {
-    "temperature": 0.7,
-    "max_new_tokens": 64,
+    "temperature": 1,
+    "max_new_tokens": 100,
     "top_p": 0.9,
     "repetition_penalty": 1.2,
     "do_sample": True,
-    "seed": 42,
 }
 CONFIG.update(**base_config_dict)
 

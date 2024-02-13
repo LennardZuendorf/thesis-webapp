@@ -100,11 +100,15 @@ def gpu_loading_config(max_memory: str = "15000MB"):
 
 
 # formatting mistral attention values
-# CREDIT: copied and adapted from BERTViz
+# CREDIT: copied from BERTViz
 # see https://github.com/jessevig/bertviz
-def format_mistral_attention(attention_values):
+def format_mistral_attention(attention_values, layers=None, heads=None):
+    if layers:
+        attention_values = [attention_values[layer_index] for layer_index in layers]
     squeezed = []
     for layer_attention in attention_values:
         layer_attention = layer_attention.squeeze(0)
+        if heads:
+            layer_attention = layer_attention[heads]
         squeezed.append(layer_attention)
-    return torch.stack(squeezed).to(torch.device("cpu"))
+    return torch.stack(squeezed)

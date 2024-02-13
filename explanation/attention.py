@@ -37,8 +37,8 @@ def chat_explained(model, prompt):
         attention_output = mdl.format_mistral_attention(attention_output)
         averaged_attention = fmt.avg_attention(attention_output, model="mistral")
 
-        response_text = fmt.format_output_text(output_text)
-        response_text = mistral.format_answer(response_text)
+        output_text = fmt.format_output_text(output_text)
+        response_text = mistral.format_answer(output_text)
 
     # otherwise use attention visualization for godel
     else:
