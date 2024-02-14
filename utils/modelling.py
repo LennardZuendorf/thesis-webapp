@@ -1,7 +1,9 @@
 # modelling util module providing formatting functions for model functionalities
 
 # external imports
+import torch
 import gradio as gr
+from transformers import BitsAndBytesConfig
 
 
 # function that limits the prompt to contain model runtime
@@ -43,7 +45,7 @@ def prompt_limiter(
 
     # if token count small enough, adding history bit by bit
     if pre_count < 800:
-        # setting the count to the precount
+        # setting the count to the pre-count
         count = pre_count
         # reversing the history to prioritize recent conversations
         history.reverse()
@@ -72,3 +74,41 @@ def token_counter(tokenizer, text: str):
     tokens = tokenizer(text, return_tensors="pt").input_ids
     # return the token count
     return len(tokens[0])
+
+
+# function to determine the device to use
+def get_device():
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+    return device
+
+
+# function to set device config
+# CREDIT: Copied from captum llama 2 example
+# see https://captum.ai/tutorials/Llama2_LLM_Attribution
+def gpu_loading_config(max_memory: str = "15000MB"):
+    n_gpus = torch.cuda.device_count()
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_use_double_quant=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.bfloat16,
+    )
+    return n_gpus, max_memory, bnb_config
+
+
+# formatting mistral attention values
+# CREDIT: copied from BERTViz
+# see https://github.com/jessevig/bertviz
+def format_mistral_attention(attention_values, layers=None, heads=None):
+    if layers:
+        attention_values = [attention_values[layer_index] for layer_index in layers]
+    squeezed = []
+    for layer_attention in attention_values:
+        layer_attention = layer_attention.squeeze(0)
+        if heads:
+            layer_attention = layer_attention[heads]
+        squeezed.append(layer_attention)
+    return torch.stack(squeezed)

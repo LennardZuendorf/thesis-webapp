@@ -26,7 +26,7 @@ css = """
     .examples {text-align: start;}
     .seperatedRow {border-top: 1rem solid;}",
     """
-# custom js to force lightmode in custom environments
+# custom js to force light mode in custom environments
 if os.environ["HOSTING"].lower() != "spaces":
     js = """
     function () {
@@ -52,6 +52,12 @@ def load_md(path):
 
 # function to display the system prompt info
 def system_prompt_info(sys_prompt_txt):
+    if sys_prompt_txt == "":
+        sys_prompt_txt = """
+            You are a helpful, respectful and honest assistant.
+            Always answer as helpfully as possible, while being safe.
+        """
+
     # display the system prompt using the Gradio Info component
     gr.Info(f"The system prompt was set to:\n {sys_prompt_txt}")
 
@@ -65,8 +71,13 @@ def xai_info(xai_radio):
         gr.Info("No XAI method was selected.")
 
 
+def model_info(model_radio):
+    # displays the selected model using the Gradio Info component
+    gr.Info(f"The following model was selected:\n {model_radio} ")
+
+
 # ui interface based on Gradio Blocks
-# see https://www.gradio.app/docs/interface)
+# see https://www.gradio.app/docs/interface
 with gr.Blocks(
     css=css,
     js=js,
@@ -97,10 +108,9 @@ with gr.Blocks(
                 """)
         # row with columns for the different settings
         with gr.Row(equal_height=True):
-            # accordion that extends if clicked
-            with gr.Accordion(label="Application Settings", open=False):
+            with gr.Accordion("Application Settings", open=False):
                 # column that takes up 3/4 of the row
-                with gr.Column(scale=3):
+                with gr.Column(scale=2):
                     # textbox to enter the system prompt
                     system_prompt = gr.Textbox(
                         label="System Prompt",
@@ -117,15 +127,29 @@ with gr.Blocks(
                     xai_selection = gr.Radio(
                         ["None", "SHAP", "Attention"],
                         label="Interpretability Settings",
-                        info="Select a Interpretability Implementation to use.",
+                        info=(
+                            "Select a Interpretability Approach Implementation to use."
+                        ),
                         value="None",
                         interactive=True,
                         show_label=True,
                     )
+                # column that takes up 1/4 of the row
+                with gr.Column(scale=1):
+                    # checkbox group to select the xai method
+                    model_selection = gr.Radio(
+                        ["GODEL", "Mistral"],
+                        label="Model Settings",
+                        info="Select a Model to use.",
+                        value="Mistral",
+                        interactive=True,
+                        show_label=True,
+                    )
 
-            # calling info functions on inputs/submits for different settings
-            system_prompt.submit(system_prompt_info, [system_prompt])
-            xai_selection.input(xai_info, [xai_selection])
+                # calling info functions on inputs/submits for different settings
+                system_prompt.input(system_prompt_info, [system_prompt])
+                xai_selection.change(xai_info, [xai_selection])
+                model_selection.change(model_info, [model_selection])
 
         # row with chatbot ui displaying "conversation" with the model
         with gr.Row(equal_height=True):
@@ -137,7 +161,7 @@ with gr.Blocks(
                     The explanations are based on 10 buckets that range between the
                     lowest negative value (1 to 5) and the highest positive attribution value (6 to 10).
                     **The legend shows the color for each bucket.**
-                                
+
                     *HINT*: This works best in light mode.
                     """)
                     xai_text = gr.HighlightedText(
@@ -153,11 +177,12 @@ with gr.Blocks(
                     show_copy_button=True,
                     avatar_images=("./public/human.jpg", "./public/bot.jpg"),
                 )
-                # extenable components for extra knowledge
+                # extendable components for extra knowledge
                 with gr.Accordion(label="Additional Knowledge", open=False):
-                    gr.Markdown(
-                        "*Hint:* Add extra knowledge to see GODEL work the best."
-                    )
+                    gr.Markdown("""
+                        *Hint:* Add extra knowledge to see GODEL work the best.
+                        Knowledge doesn't work with Mistral and will be ignored.
+                        """)
                     # textbox to enter the knowledge
                     knowledge_input = gr.Textbox(
                         value="",
@@ -166,11 +191,6 @@ with gr.Blocks(
                         info="Add additional context knowledge.",
                         show_label=True,
                     )
-                # textbox to enter the user prompt
-                gr.Markdown(
-                    "*Hint:* More complicated question give better explanation"
-                    " insights!"
-                )
                 user_prompt = gr.Textbox(
                     label="Input Message",
                     max_lines=5,
@@ -190,34 +210,102 @@ with gr.Blocks(
                 submit_btn = gr.Button("Submit", variant="primary")
         # row with content examples that get autofilled on click
         with gr.Row(elem_classes="examples"):
-            # examples util component
-            # see: https://www.gradio.app/docs/examples
-            gr.Examples(
-                label="Example Questions",
-                examples=[
-                    [
-                        "How does a black hole form in space?",
-                        (
-                            "Black holes are created when a massive star's core"
-                            " collapses after a supernova, forming an object with"
-                            " gravity so intense that even light cannot escape."
-                        ),
+            with gr.Accordion("Mistral Model Examples", open=False):
+                # examples util component
+                # see: https://www.gradio.app/docs/examples
+                gr.Examples(
+                    label="Example Questions",
+                    examples=[
+                        ["Does money buy happiness?", "None", "", "Mistral", ""],
+                        ["Does money buy happiness?", "SHAP", "", "Mistral", ""],
+                        ["Does money buy happiness?", "Attention", "", "Mistral", ""],
+                        [
+                            "Does money buy happiness?",
+                            "None",
+                            (
+                                "Respond from the perspective of billionaire heir"
+                                " living his best life with his father's money."
+                            ),
+                            "Mistral",
+                            "",
+                        ],
+                        [
+                            "Does money buy happiness?",
+                            "SHAP",
+                            (
+                                "Respond from the perspective of billionaire heir"
+                                " living his best life with his father's money."
+                            ),
+                            "Mistral",
+                            "",
+                        ],
+                        [
+                            "Does money buy happiness?",
+                            "Attention",
+                            (
+                                "Respond from the perspective of billionaire heir"
+                                " living his best life with his father's money."
+                            ),
+                            "Mistral",
+                            "",
+                        ],
                     ],
-                    [
-                        (
-                            "Explain the importance of the Rosetta Stone in"
-                            " understanding ancient languages."
-                        ),
-                        (
-                            "The Rosetta Stone, an ancient Egyptian artifact, was key"
-                            " in decoding hieroglyphs, featuring the same text in three"
-                            " scripts: hieroglyphs, Demotic, and Greek."
-                        ),
+                    inputs=[
+                        user_prompt,
+                        xai_selection,
+                        system_prompt,
+                        model_selection,
+                        knowledge_input,
                     ],
-                    ["Does money buy happiness?", ""],
-                ],
-                inputs=[user_prompt, knowledge_input],
-            )
+                )
+            with gr.Accordion("GODEL Model Examples", open=False):
+                # examples util component
+                # see: https://www.gradio.app/docs/examples
+                gr.Examples(
+                    label="Example Questions",
+                    examples=[
+                        [
+                            "Does money buy happiness?",
+                            "SHAP",
+                            (
+                                "Some studies have found a correlation between income"
+                                " and happiness, but this relationship often has"
+                                " diminishing returns. From a psychological standpoint,"
+                                " it's not just having money, but how it is used that"
+                                " influences happiness."
+                            ),
+                            "",
+                            "GODEL",
+                        ],
+                        [
+                            "Does money buy happiness?",
+                            "Attention",
+                            (
+                                "Some studies have found a correlation between income"
+                                " and happiness, but this relationship often has"
+                                " diminishing returns. From a psychological standpoint,"
+                                " it's not just having money, but how it is used that"
+                                " influences happiness."
+                            ),
+                            "",
+                            "GODEL",
+                        ],
+                        [
+                            "Does money buy happiness?",
+                            "Attention",
+                            "",
+                            "",
+                            "GODEL",
+                        ],
+                    ],
+                    inputs=[
+                        user_prompt,
+                        xai_selection,
+                        knowledge_input,
+                        system_prompt,
+                        model_selection,
+                    ],
+                )
 
     # explanations tab used to provide explanations for a specific conversation
     with gr.Tab("Explanations"):
@@ -240,6 +328,11 @@ with gr.Blocks(
                 show_label=True,
                 height="400px",
             )
+        with gr.Row():
+            with gr.Accordion("Explanation Plot", open=False):
+                xai_plot = gr.Plot(
+                    label="Input Sequence Attribution Plot", show_label=True
+                )
 
     # functions to trigger the controller
     ## takes information for the chat and the xai selection
@@ -247,14 +340,28 @@ with gr.Blocks(
     ## see backend/controller.py for more information
     submit_btn.click(
         interference,
-        [user_prompt, chatbot, knowledge_input, system_prompt, xai_selection],
-        [user_prompt, chatbot, xai_interactive, xai_text],
+        [
+            user_prompt,
+            chatbot,
+            knowledge_input,
+            system_prompt,
+            xai_selection,
+            model_selection,
+        ],
+        [user_prompt, chatbot, xai_interactive, xai_text, xai_plot],
     )
     # function triggered by the enter key
     user_prompt.submit(
         interference,
-        [user_prompt, chatbot, knowledge_input, system_prompt, xai_selection],
-        [user_prompt, chatbot, xai_interactive, xai_text],
+        [
+            user_prompt,
+            chatbot,
+            knowledge_input,
+            system_prompt,
+            xai_selection,
+            model_selection,
+        ],
+        [user_prompt, chatbot, xai_interactive, xai_text, xai_plot],
     )
 
     # final row to show legal information
@@ -263,7 +370,7 @@ with gr.Blocks(
         # load about.md markdown
         gr.Markdown(value=load_md("public/about.md"))
         with gr.Accordion(label="Credits, Data Protection, License"):
-            # load credits and dataprotection markdown
+            # load credits and data protection markdown
             gr.Markdown(value=load_md("public/credits_dataprotection_license.md"))
 
 # mount function for fastAPI Application
@@ -275,7 +382,7 @@ if __name__ == "__main__":
     # use standard gradio launch option for hgf spaces
     if os.environ["HOSTING"].lower() == "spaces":
         # set password to deny public access
-        ui.launch(auth=("htw", "berlin@123"))
+        ui.launch(auth=(os.environ["USER"], os.environ["PW"]))
 
     # otherwise run the application on port 8080 in reload mode
     ## for local development, uses Docker for Prod deployment

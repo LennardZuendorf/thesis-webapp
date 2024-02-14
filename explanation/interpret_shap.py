@@ -6,6 +6,7 @@ import torch
 
 # internal imports
 from utils import formatting as fmt
+from .plotting import plot_seq
 from .markup import markup_text
 
 # global variables
@@ -13,27 +14,14 @@ TEACHER_FORCING = None
 TEXT_MASKER = None
 
 
-# main explain function that returns a chat with explanations
-def chat_explained(model, prompt):
-    model.set_config({})
+# function to extract summarized sequence wise attribution
+def shap_extract_seq_att(shap_values):
 
-    # create the shap explainer
-    shap_explainer = PartitionExplainer(model.MODEL, model.TOKENIZER)
+    # extracting summed up shap values
+    values = fmt.flatten_attribution(shap_values.values[0], 1)
 
-    # get the shap values for the prompt
-    shap_values = shap_explainer([prompt])
-
-    # create the explanation graphic and marked text array
-    graphic = create_graphic(shap_values)
-    marked_text = markup_text(
-        shap_values.data[0], shap_values.values[0], variant="shap"
-    )
-
-    # create the response text
-    response_text = fmt.format_output_text(shap_values.output_names)
-
-    # return response, graphic and marked_text array
-    return response_text, graphic, marked_text
+    # returning list of tuples of token and value
+    return list(zip(shap_values.data[0], values))
 
 
 # function used to wrap the model with a shap model
@@ -45,7 +33,7 @@ def wrap_shap(model):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # updating the model settings
-    model.set_config()
+    model.set_config({})
 
     # (re)initialize the shap models and masker
     # creating a shap text_generation model
@@ -70,3 +58,29 @@ def create_graphic(shap_values):
 
     # return the html graphic as string to display in iFrame
     return str(graphic_html)
+
+
+# main explain function that returns a chat with explanations
+def chat_explained(model, prompt):
+    model.set_config({})
+
+    # create the shap explainer
+    shap_explainer = PartitionExplainer(model.MODEL, model.TOKENIZER)
+
+    # get the shap values for the prompt
+    shap_values = shap_explainer([prompt])
+
+    # create the explanation graphic and marked text array
+    graphic = create_graphic(shap_values)
+    marked_text = markup_text(
+        shap_values.data[0], shap_values.values[0], variant="shap"
+    )
+
+    # create the response text
+    response_text = fmt.format_output_text(shap_values.output_names)
+
+    # creating sequence attribution plot
+    plot = plot_seq(shap_extract_seq_att(shap_values), "PartitionSHAP")
+
+    # return response, graphic and marked_text array
+    return response_text, graphic, marked_text, plot

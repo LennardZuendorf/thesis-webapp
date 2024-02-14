@@ -2,12 +2,31 @@
 
 # external imports
 import re
+import torch
 import numpy as np
 from numpy import ndarray
 
 
-# function to format the model reponse nicely
-# takes a list of strings and returnings a combined string
+# globally defined tokens that are removed from the output
+SPECIAL_TOKENS = [
+    "[CLS]",
+    "[SEP]",
+    "[PAD]",
+    "[UNK]",
+    "[MASK]",
+    "▁",
+    "Ġ",
+    "</w>",
+    "<0x0A>",
+    "<0x0D>",
+    "<0x09>",
+    "<s>",
+    "</s>",
+]
+
+
+# function to format the model repose nicely
+# takes a list of strings and returning a combined string
 def format_output_text(output: list):
 
     # remove special tokens from list using other function
@@ -22,8 +41,24 @@ def format_output_text(output: list):
 
     # add all other list items with a space in between
     for txt in formatted_output[1:]:
-        # check if the token is a punctuation mark
-        if txt in [".", ",", "!", "?"]:
+        # check if the token is a punctuation mark or other special character
+        if txt in [
+            ".",
+            ",",
+            "!",
+            "?",
+            ":",
+            ";",
+            ")",
+            "]",
+            "}",
+            "'",
+            '"',
+            "[",
+            "{",
+            "(",
+            "<",
+        ]:
             # add punctuation mark without space
             output_str += txt
         # add token with space if not empty
@@ -31,13 +66,11 @@ def format_output_text(output: list):
             output_str += " " + txt
 
     # return the combined string with multiple spaces removed
-    return re.sub(" +", " ", output_str)
+    return re.sub(r"\s+", " ", output_str)
 
 
 # format the tokens by removing special tokens and special characters
 def format_tokens(tokens: list):
-    # define special tokens to remove
-    special_tokens = ["[CLS]", "[SEP]", "[PAD]", "[UNK]", "[MASK]", "▁", "Ġ", "</w>"]
 
     # initialize empty list
     updated_tokens = []
@@ -49,7 +82,7 @@ def format_tokens(tokens: list):
             t = t.lstrip("▁")
 
         # loop through special tokens list and remove from current token if matched
-        for s in special_tokens:
+        for s in SPECIAL_TOKENS:
             t = t.replace(s, "")
 
         # add token to list
@@ -70,6 +103,19 @@ def flatten_attention(values: ndarray, axis: int = 0):
 
 
 # function to get averaged decoder attention from attention values
-def avg_attention(attention_values):
-    attention = attention_values.decoder_attentions[0][0].detach().numpy()
-    return np.mean(attention, axis=0)
+def avg_attention(attention_values, model: str):
+
+    # check if model is godel
+    if model == "godel":
+        # get attention values for the input and output vectors
+        attention = attention_values.encoder_attentions[0][0].detach().numpy()
+        return np.mean(attention, axis=1)
+
+    # extracting attention values for mistral
+    attention = attention_values.to(torch.device("cpu")).detach().numpy()
+
+    # removing the last dimension and transposing to get the correct shape
+    attention = attention[:, :, :, 0]
+
+    # return the averaged attention values
+    return np.mean(attention, axis=1)

@@ -12,7 +12,7 @@ This research tackles the rise of LLM based applications such a chatbots and exp
 
 ## Implementation
 
-This project is an implementation of PartitionSHAP into GODEL by Microsoft - [GODEL Model](https://huggingface.co/microsoft/GODEL-v1_1-large-seq2seq) which is a generative seq2seq transformer fine-tuned for goal directed dialog. It supports context and knowledge base inputs.
+This project
 
 The UI is build with Gradio, utilizing some custom components and FastAPI.
 

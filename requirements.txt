@@ -1,19 +1,18 @@
 gradio~=4.7.1
 transformers~=4.35.2
 torch~=2.1.1
-shap~=0.44.0
+shap
+captum @ git+https://github.com/LennardZuendorf/thesis-captum.git
 bertviz~=1.4.0
 accelerate~=0.24.1
+bitsandbytes
 markdown~=3.5.1
 huggingface_hub~=0.19.4
 fastapi~=0.104.1
 uvicorn~=0.24.0
-tinydb~=4.8.0
 black~=23.12.0
 pylint~=3.0.0
-seaborn~=0.13.0
 numpy
 matplotlib
 pre-commit
-ipython
 gradio-iframe~=0.0.10
