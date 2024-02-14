@@ -300,10 +300,10 @@ with gr.Blocks(
                     ],
                     inputs=[
                         user_prompt,
+                        xai_selection,
                         knowledge_input,
                         system_prompt,
                         model_selection,
-                        xai_selection,
                     ],
                 )
 
@@ -382,7 +382,7 @@ if __name__ == "__main__":
     # use standard gradio launch option for hgf spaces
     if os.environ["HOSTING"].lower() == "spaces":
         # set password to deny public access
-        ui.launch(auth=("htw", "berlin@123"))
+        ui.launch(auth=(os.environ["USER"], os.environ["PW"]))
 
     # otherwise run the application on port 8080 in reload mode
     ## for local development, uses Docker for Prod deployment

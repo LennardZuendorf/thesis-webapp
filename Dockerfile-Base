@@ -1,12 +1,12 @@
 # Dockerfile to create base image with all needed dependencies. for the quick dockerfile build of the webapp
 # because all dependencies are already installed, the next webapp build using this base image is much quicker
 
-# using newest python as a base image
-FROM thesis-base:0.1.1
+# complete build based on clean python (slower)
+FROM python:3.11.6
 
 # install dependencies based on requirements
 COPY requirements.txt ./
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 # build and run commands
-## docker build -t thesis-base:1.0.1 -f Dockerfile-Base .
+## docker build -t thesis-base:2.0.0 -f Dockerfile-Base .

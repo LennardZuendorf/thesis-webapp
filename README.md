@@ -19,6 +19,8 @@ disable_embedding: true
 ## 📜 Info:
 This is the UI showcase for my thesis about the interpretability of LLM based chatbot application and applications of XAI.
 
+**Current Release: v1.3.1**
+
 ### 🔗 Links:
 
 **[GitHub Repository](https://github.com/LennardZuendorf/thesis-webapp)**
@@ -49,7 +51,7 @@ This Project was part of my studies of Business Computing at the University of A
 
 1. Clone the repository using git or GitHub cli.
 2. Start the (virtual) environment.
-3. Set the environment variable "HOSTING", i.e. like this `export HOSTING="local"`, see [fastAPI Docu](https://fastapi.tiangolo.com/advanced/settings/)
+3. Set the environment variable "HOSTING", i.e. like this `export HOSTING=local USER=admin PW=test`, see [fastAPI Docu](https://fastapi.tiangolo.com/advanced/settings/)
 3. Install the requirements using `pip install -r requirements.txt`
 4. Run the app using `uvicorn main:app`. You can add `--reload` to enable hot reloading. The app will be available at `localhost:8000`.
 
@@ -58,14 +60,14 @@ This Project was part of my studies of Business Computing at the University of A
 
 1. Clone the repository using git or GitHub cli.
 2. Build the docker image using `docker build -t thesis-webapp -f Dockerfile . .`, the command commented in the docker file or the command referenced by your hosting service.
-3. Run the docker image using `docker run --name thesis-webapp -e HOSTING=local -p 8080:8080 thesis-webapp`, the command commented in the docker file or the command referenced by your hosting service.
+3. Run the docker image using `docker run --name thesis-webapp -e HOSTING=local USER=admin PW=test -p 8080:8080 thesis-webapp`, the command commented in the docker file or the command referenced by your hosting service.
 4. The app will be available at `localhost:8080`. If you are using a hosting service, the port may be different.
 
 ### 🐳 Docker Image :
 (This assumes you have set up docker desktop or are using a hosting service able to handle Docker images.)
 
-1. Pull the docker image from ghcr using `docker pull ghcr.io/LennardZuendorf/thesis-webapp:latest`.
-2. Run the docker image in terminal using `docker run --name thesis-webapp -e HOSTING=local -p 8080:8080 lennardzuendorf/thesis-webapp:latest`, the command commented in the docker file or the command referenced by your hosting service.
+1. Pull the docker image from ghcr using `docker pull ghcr.io/LennardZuendorf/thesis-webapp:1.3.1`.
+2. Run the docker image in terminal using `docker run --name thesis-webapp -e HOSTING=local USER=admin PW=test -p 8080:8080 lennardzuendorf/thesis-webapp::1.3.1`, the command commented in the docker file or the command referenced by your hosting service.
 3. The app will be available at `localhost:8080`. If you are using a hosting service, the port may be different.
 
 ## 📝 License and Credits:
@@ -79,15 +81,25 @@ This project is licensed under the MIT License, see [LICENSE](LICENSE.md) for mo
 
 See code for in detailed credits, work is strongly based on:
 
+#### captum
+- [GitHub](https://github.com/pytorch/captum)
+- [Inital Paper](https://arxiv.org/pdf/2009.07896.pdf)
+
+#### shap
+- [GitHub](https://github.com/shap/shap)
+- [Inital Paper](https://arxiv.org/abs/1705.07874)
+
 #### GODEL
 - [HGF Model Page](https://huggingface.co/microsoft/GODEL-v1_1-large-seq2seq?text=Hey+my+name+is+Mariama%21+How+are+you%3F)
 - [Paper on HGF](https://huggingface.co/papers/2206.11309)
 - [Paper Print](https://arxiv.org/abs/2206.11309)
 
-#### SHAP
-- [Github](https://github.com/shap/shap)
-- [Initial Paper](https://arxiv.org/abs/1705.07874)
+#### Mistral 7B (Instruct)
+- [HGF Model Page](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2)
+- [Paper on HGF](https://huggingface.co/papers/2310.06825)
+- [Paper Print](https://arxiv.org/abs/2310.06825)
+
 
 #### Custom Component (/components/iframe/)
 
-Is based on Gradio component, see indivdual README for full changelog.
+Is based on Gradio component, see individual README for full changelog.

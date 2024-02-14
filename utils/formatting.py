@@ -41,8 +41,24 @@ def format_output_text(output: list):
 
     # add all other list items with a space in between
     for txt in formatted_output[1:]:
-        # check if the token is a punctuation mark
-        if txt in [".", ",", "!", "?"]:
+        # check if the token is a punctuation mark or other special character
+        if txt in [
+            ".",
+            ",",
+            "!",
+            "?",
+            ":",
+            ";",
+            ")",
+            "]",
+            "}",
+            "'",
+            '"',
+            "[",
+            "{",
+            "(",
+            "<",
+        ]:
             # add punctuation mark without space
             output_str += txt
         # add token with space if not empty
@@ -50,7 +66,7 @@ def format_output_text(output: list):
             output_str += " " + txt
 
     # return the combined string with multiple spaces removed
-    return re.sub(" +", " ", output_str)
+    return re.sub(r"\s+", " ", output_str)
 
 
 # format the tokens by removing special tokens and special characters

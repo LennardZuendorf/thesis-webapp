@@ -1,6 +1,7 @@
 # Mistral model module for chat interaction and model instance control
 
 # external imports
+import re
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 import torch
 import gradio as gr
@@ -92,8 +93,9 @@ def format_answer(answer: str):
     # empty answer string
     formatted_answer = ""
 
-    # splitting answer by instruction tokens
-    segments = answer.split("[/INST]")
+    # splitting answer by instruction tokens using re and a pattern
+    pattern = r"\[/INST\]|\[ / INST\]|\[ / INST \]|\[/ INST \]"
+    segments = re.split(pattern, answer)
 
     # checking if proper history got returned
     if len(segments) > 1:
@@ -103,11 +105,10 @@ def format_answer(answer: str):
         # return warning and full answer if not enough [/INST] tokens found
         gr.Warning("""
                    There was an issue with answer formatting...\n
-                   returning the full answer.
+                   Returning the full answer.
                    """)
         formatted_answer = answer
 
-    print(f"CUT:\n {answer}\nINTO:\n{formatted_answer}")
     return formatted_answer
 
 
