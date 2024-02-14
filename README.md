@@ -51,7 +51,7 @@ This Project was part of my studies of Business Computing at the University of A
 
 1. Clone the repository using git or GitHub cli.
 2. Start the (virtual) environment.
-3. Set the environment variable "HOSTING", i.e. like this `export HOSTING=local USER=admin PW=test`, see [fastAPI Docu](https://fastapi.tiangolo.com/advanced/settings/)
+3. Set the environment variable "HOSTING", i.e. like this `export HOSTING=local`, see [fastAPI Docu](https://fastapi.tiangolo.com/advanced/settings/)
 3. Install the requirements using `pip install -r requirements.txt`
 4. Run the app using `uvicorn main:app`. You can add `--reload` to enable hot reloading. The app will be available at `localhost:8000`.
 
@@ -60,14 +60,14 @@ This Project was part of my studies of Business Computing at the University of A
 
 1. Clone the repository using git or GitHub cli.
 2. Build the docker image using `docker build -t thesis-webapp -f Dockerfile . .`, the command commented in the docker file or the command referenced by your hosting service.
-3. Run the docker image using `docker run --name thesis-webapp -e HOSTING=local USER=admin PW=test -p 8080:8080 thesis-webapp`, the command commented in the docker file or the command referenced by your hosting service.
+3. Run the docker image using `docker run --name thesis-webapp -e HOSTING=local -p 8080:8080 thesis-webapp`, the command commented in the docker file or the command referenced by your hosting service.
 4. The app will be available at `localhost:8080`. If you are using a hosting service, the port may be different.
 
 ### 🐳 Docker Image :
 (This assumes you have set up docker desktop or are using a hosting service able to handle Docker images.)
 
 1. Pull the docker image from ghcr using `docker pull ghcr.io/LennardZuendorf/thesis-webapp:1.3.1`.
-2. Run the docker image in terminal using `docker run --name thesis-webapp -e HOSTING=local USER=admin PW=test -p 8080:8080 lennardzuendorf/thesis-webapp::1.3.1`, the command commented in the docker file or the command referenced by your hosting service.
+2. Run the docker image in terminal using `docker run --name thesis-webapp -e  PW=test -p 8080:8080 lennardzuendorf/thesis-webapp::1.3.1`, the command commented in the docker file or the command referenced by your hosting service.
 3. The app will be available at `localhost:8080`. If you are using a hosting service, the port may be different.
 
 ## 📝 License and Credits:
@@ -75,7 +75,7 @@ This Project was part of my studies of Business Computing at the University of A
 This project is licensed under the MIT License, see [LICENSE](LICENSE.md) for more information. Please cite this project, it's author and my university if you use it in your work.
 
 - Title: Building an Interpretable Natural Language AI Tool based on Transformer Models and approaches of Explainable AI.
-- Date: 2024-01-27
+- Date: 2024-02-14
 - Author: Lennard Zündorf
 - University: HTW Berlin
 

@@ -42,13 +42,14 @@ def plot_seq(seq_values: list, method: str = ""):
             },  # White background
         )
 
+    # setting plot properties, labels, and title
     plt.axhline(0, color="black", linewidth=1)
     plt.title(f"Input Token Attribution with {method}")
     plt.xlabel("Input Tokens", labelpad=0.5)
     plt.ylabel("Attribution")
     plt.xticks(x_positions, tokens, rotation=45)
 
-    # Adjust y-axis limits to ensure there's enough space for labels
+    # adjusting y-axis limits to ensure there's enough space for labels
     y_min, y_max = plt.ylim()
     y_range = y_max - y_min
     plt.ylim(y_min - 0.1 * y_range, y_max + 0.1 * y_range)

@@ -147,7 +147,7 @@ with gr.Blocks(
                     )
 
                 # calling info functions on inputs/submits for different settings
-                system_prompt.change(system_prompt_info, [system_prompt])
+                system_prompt.input(system_prompt_info, [system_prompt])
                 xai_selection.change(xai_info, [xai_selection])
                 model_selection.change(model_info, [model_selection])
 
